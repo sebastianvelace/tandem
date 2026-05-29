@@ -24,6 +24,7 @@ import {
   moveTaskAction,
   updateTaskAction,
 } from "@/server/actions/tasks";
+import { archiveTaskAction } from "@/server/actions/archive";
 import { useAreaTasks } from "@/hooks/useAreaTasks";
 import { Board, type MoveArgs } from "./Board";
 import { ListView } from "./ListView";
@@ -155,6 +156,14 @@ export function BoardClient({
     if (!res.ok && prev) upsert(prev);
   }
 
+  async function handleArchive(id: string) {
+    const prev = tasks.find((x) => x.id === id);
+    remove(id);
+    if (selectedId === id) setSelectedId(null);
+    const res = await archiveTaskAction({ id });
+    if (!res.ok && prev) upsert(prev);
+  }
+
   function handleToggleSubtask(task: TaskDTO) {
     const nextStatus: TaskStatus =
       task.status === "completada" ? "por_hacer" : "completada";
@@ -274,6 +283,7 @@ export function BoardClient({
           clients={clients}
           onUpdate={handleUpdate}
           onDelete={handleDelete}
+          onArchive={handleArchive}
           onToggleSubtask={handleToggleSubtask}
           onAddSubtask={(parentId, title) => void handleCreate({ parentId, title })}
           onOpenTask={(t) => setSelectedId(t.id)}

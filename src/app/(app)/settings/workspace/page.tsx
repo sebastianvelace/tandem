@@ -1,7 +1,9 @@
 import { getTranslations } from "next-intl/server";
 import { getAppContext } from "@/server/services/context";
 import { listMembersAction } from "@/server/actions/invitations";
+import { getCalendarStatusAction } from "@/server/actions/calendar";
 import { InviteMember } from "@/components/settings/InviteMember";
+import { CalendarConnection } from "@/components/settings/CalendarConnection";
 
 /* Configuración → Workspace: miembros + invitar (solo admin gestiona). */
 export default async function WorkspaceSettingsPage() {
@@ -9,6 +11,8 @@ export default async function WorkspaceSettingsPage() {
   const t = await getTranslations("settings");
   const membersRes = await listMembersAction();
   const members = membersRes.ok ? membersRes.data : [];
+  const calStatus = await getCalendarStatusAction();
+  const calConnected = calStatus.ok ? calStatus.data.connected : false;
 
   // Miembros no-admin solo ven la lista; el formulario de invitación se
   // muestra condicionalmente más abajo (solo admin).
@@ -34,6 +38,13 @@ export default async function WorkspaceSettingsPage() {
             </li>
           ))}
         </ul>
+      </section>
+
+      <section className="mt-8">
+        <h2 className="mb-3 text-sm font-medium text-[var(--color-text-muted)]">
+          {t("googleCalendar")}
+        </h2>
+        <CalendarConnection initialConnected={calConnected} />
       </section>
 
       {ctx.role === "admin" && (

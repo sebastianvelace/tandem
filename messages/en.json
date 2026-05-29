@@ -118,6 +118,7 @@
     "dueDate": "Due date",
     "colTitle": "Title",
     "delete": "Delete",
+    "archive": "Archive",
     "close": "Close",
     "fromMessage": "Created from a message",
     "fromMessageNote": "This task was created from a chat message.",
@@ -128,6 +129,45 @@
     "allSubtasksDone": "All subtasks of “{title}” are complete.",
     "markComplete": "Mark complete",
     "dismiss": "Dismiss"
+  },
+  "clients": {
+    "title": "Clients",
+    "new": "New client",
+    "edit": "Edit client",
+    "close": "Close",
+    "name": "Name",
+    "email": "Email",
+    "phone": "Phone",
+    "company": "Company",
+    "notes": "Notes",
+    "active": "Active",
+    "cancel": "Cancel",
+    "save": "Save",
+    "showInactive": "Show inactive",
+    "empty": "No clients yet.",
+    "inactive": "Inactive",
+    "deactivate": "Deactivate",
+    "activate": "Activate",
+    "delete": "Delete",
+    "linkedTasks": "Linked tasks",
+    "noLinkedTasks": "No linked tasks.",
+    "archived": "archived"
+  },
+  "archive": {
+    "title": "Archive",
+    "allAreas": "All areas",
+    "allClients": "All clients",
+    "noClient": "No client",
+    "allAssignees": "All assignees",
+    "search": "Search…",
+    "empty": "No archived tasks.",
+    "restore": "Restore",
+    "deletePermanent": "Delete permanently"
+  },
+  "calendar": {
+    "prev": "Previous month",
+    "next": "Next month",
+    "today": "Today"
   },
   "settings": {
     "title": "Settings",
@@ -140,7 +180,10 @@
     "inviteMember": "Invite member",
     "inviteEmail": "Invitee email",
     "googleCalendar": "Google Calendar",
-    "connectCalendar": "Connect Google Calendar"
+    "connectCalendar": "Connect Google Calendar",
+    "calendarConnected": "Connected",
+    "calendarNotConnected": "Not connected",
+    "disconnect": "Disconnect"
   },
   "emptyStates": {
     "noAreas": "No areas yet. Create the first one.",

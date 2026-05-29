@@ -5,7 +5,8 @@ import { createServerClient } from "@supabase/ssr";
  * Auth gate global (ARQ-11, SEC-01): refresca la sesión y protege TODAS las
  * rutas salvo login, callback OAuth y assets. Nada público excepto eso.
  */
-const PUBLIC_PATHS = ["/login", "/auth/callback"];
+// /api/cron se protege con CRON_SECRET dentro de la ruta, no por sesión.
+const PUBLIC_PATHS = ["/login", "/auth/callback", "/api/cron"];
 
 export async function middleware(request: NextRequest) {
   let response = NextResponse.next({ request });

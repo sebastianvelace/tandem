@@ -118,6 +118,7 @@
     "dueDate": "Fecha límite",
     "colTitle": "Título",
     "delete": "Eliminar",
+    "archive": "Archivar",
     "close": "Cerrar",
     "fromMessage": "Creada desde un mensaje",
     "fromMessageNote": "Esta tarea se creó desde un mensaje del chat.",
@@ -128,6 +129,45 @@
     "allSubtasksDone": "Todas las subtareas de «{title}» están completas.",
     "markComplete": "Marcar completada",
     "dismiss": "Descartar"
+  },
+  "clients": {
+    "title": "Clientes",
+    "new": "Nuevo cliente",
+    "edit": "Editar cliente",
+    "close": "Cerrar",
+    "name": "Nombre",
+    "email": "Email",
+    "phone": "Teléfono",
+    "company": "Empresa",
+    "notes": "Notas",
+    "active": "Activo",
+    "cancel": "Cancelar",
+    "save": "Guardar",
+    "showInactive": "Mostrar inactivos",
+    "empty": "Aún no hay clientes.",
+    "inactive": "Inactivo",
+    "deactivate": "Desactivar",
+    "activate": "Activar",
+    "delete": "Eliminar",
+    "linkedTasks": "Tareas vinculadas",
+    "noLinkedTasks": "Sin tareas vinculadas.",
+    "archived": "archivada"
+  },
+  "archive": {
+    "title": "Archivo",
+    "allAreas": "Todas las áreas",
+    "allClients": "Todos los clientes",
+    "noClient": "Sin cliente",
+    "allAssignees": "Todos los responsables",
+    "search": "Buscar…",
+    "empty": "No hay tareas archivadas.",
+    "restore": "Restaurar",
+    "deletePermanent": "Eliminar permanentemente"
+  },
+  "calendar": {
+    "prev": "Mes anterior",
+    "next": "Mes siguiente",
+    "today": "Hoy"
   },
   "settings": {
     "title": "Configuración",
@@ -140,7 +180,10 @@
     "inviteMember": "Invitar miembro",
     "inviteEmail": "Email del invitado",
     "googleCalendar": "Google Calendar",
-    "connectCalendar": "Conectar Google Calendar"
+    "connectCalendar": "Conectar Google Calendar",
+    "calendarConnected": "Conectado",
+    "calendarNotConnected": "No conectado",
+    "disconnect": "Desconectar"
   },
   "emptyStates": {
     "noAreas": "Aún no hay áreas. Crea la primera.",

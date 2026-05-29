@@ -3,6 +3,7 @@ import { and, asc, eq, isNull, sql } from "drizzle-orm";
 import { db } from "@/db/client";
 import { areas, clients, messages, tasks, type Task } from "@/db/schema";
 import { AppError } from "@/server/auth/errors";
+import { removeTaskEvent, syncTaskDueDate } from "@/server/calendar/sync";
 import type { TaskDTO } from "@/lib/board/types";
 import type {
   CreateTaskFromMessageInput,
@@ -159,6 +160,30 @@ export async function getTask(
   return toDTO(await getTaskInWorkspace(id, workspaceId));
 }
 
+/** Tareas con fecha límite (CAL-01..04): todas las áreas, no archivadas. */
+export async function listScheduledTasks(workspaceId: string) {
+  return db
+    .select({
+      id: tasks.id,
+      title: tasks.title,
+      status: tasks.status,
+      priority: tasks.priority,
+      areaId: tasks.areaId,
+      areaName: areas.name,
+      dueDate: tasks.dueDate,
+    })
+    .from(tasks)
+    .innerJoin(areas, eq(areas.id, tasks.areaId))
+    .where(
+      and(
+        eq(tasks.workspaceId, workspaceId),
+        isNull(tasks.archivedAt),
+        sql`${tasks.dueDate} IS NOT NULL`,
+      ),
+    )
+    .orderBy(asc(tasks.dueDate));
+}
+
 export async function createTask(
   workspaceId: string,
   userId: string,
@@ -199,6 +224,7 @@ export async function createTask(
       completedAt: status === "completada" ? new Date() : null,
     })
     .returning();
+  if (created!.dueDate) await syncTaskDueDate(created!);
   return toDTO(created!);
 }
 
@@ -231,6 +257,8 @@ export async function updateTask(
     .set(patch)
     .where(eq(tasks.id, input.id))
     .returning();
+  // Sync side-effect (ADR-007): refleja due_date/archivado en Google Calendar.
+  await syncTaskDueDate(updated!);
   return toDTO(updated!);
 }
 
@@ -281,6 +309,8 @@ export async function deleteTask(
   id: string,
 ): Promise<{ id: string; areaId: string }> {
   const existing = await getTaskInWorkspace(id, workspaceId);
+  // Borra el evento de Google asociado antes de eliminar (CAL-08, best-effort).
+  await removeTaskEvent(id, workspaceId);
   // Las subtareas caen por ON DELETE CASCADE (parent_id self-reference).
   await db.delete(tasks).where(eq(tasks.id, id));
   return { id, areaId: existing.areaId };

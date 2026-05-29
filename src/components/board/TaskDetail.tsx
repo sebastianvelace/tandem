@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
-import { Trash2, X } from "lucide-react";
+import { Archive, Trash2, X } from "lucide-react";
 import type { TaskDTO, TaskPriority, TaskStatus } from "@/lib/board/types";
 import type { ClientLite, MemberLite } from "@/lib/chat/types";
 import { childrenByParent, subtaskProgress } from "@/lib/board/selectors";
@@ -21,6 +21,7 @@ export function TaskDetail({
   clients,
   onUpdate,
   onDelete,
+  onArchive,
   onToggleSubtask,
   onAddSubtask,
   onOpenTask,
@@ -32,6 +33,7 @@ export function TaskDetail({
   clients: ClientLite[];
   onUpdate: (input: UpdateTaskInput) => void;
   onDelete: (id: string) => void;
+  onArchive: (id: string) => void;
   onToggleSubtask: (t: TaskDTO) => void;
   onAddSubtask: (parentId: string, title: string) => void;
   onOpenTask: (t: TaskDTO) => void;
@@ -60,6 +62,16 @@ export function TaskDetail({
       <div className="flex h-12 items-center justify-between border-b border-[var(--color-border)] px-4">
         <span className="text-sm font-semibold">{t("taskDetail")}</span>
         <div className="flex items-center gap-1">
+          {task.parentId === null && (
+            <button
+              onClick={() => onArchive(task.id)}
+              aria-label={t("archive")}
+              title={t("archive")}
+              className="flex h-7 w-7 items-center justify-center rounded-md text-[var(--color-text-faint)] hover:bg-[var(--color-surface-2)] hover:text-[var(--color-text)]"
+            >
+              <Archive size={15} />
+            </button>
+          )}
           <button
             onClick={() => onDelete(task.id)}
             aria-label={t("delete")}
