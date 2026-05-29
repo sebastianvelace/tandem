@@ -56,11 +56,41 @@
       "en_proceso": "En proceso",
       "completada": "Completada"
     },
+    "priorityLabel": "Prioridad",
     "priority": {
       "alta": "Alta",
       "media": "Media",
       "baja": "Baja"
     }
+  },
+  "chat": {
+    "empty": "Aún no hay mensajes. Escribe el primero.",
+    "placeholder": "Escribe un mensaje…",
+    "placeholderArea": "Mensaje a #{area}",
+    "send": "Enviar",
+    "edited": "(editado)",
+    "deleted": "[mensaje eliminado]",
+    "reply": "Responder en hilo",
+    "edit": "Editar",
+    "delete": "Eliminar",
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "close": "Cerrar",
+    "loading": "Cargando…",
+    "thread": "Hilo",
+    "noReplies": "Sé el primero en responder.",
+    "replyPlaceholder": "Responder…",
+    "repliesCount": "{count, plural, one {# respuesta} other {# respuestas}}",
+    "hasTask": "Tarea",
+    "createTask": "Crear tarea",
+    "createTaskTitle": "Crear tarea desde mensaje",
+    "createTaskAction": "Crear tarea",
+    "taskTitle": "Título",
+    "taskDescription": "Descripción",
+    "assignee": "Responsable",
+    "unassigned": "Sin asignar",
+    "client": "Cliente",
+    "noClient": "Sin cliente"
   },
   "settings": {
     "title": "Configuración",

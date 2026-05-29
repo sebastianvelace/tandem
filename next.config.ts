@@ -31,6 +31,12 @@ const securityHeaders = [
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
+  images: {
+    // Avatares de Google (OAuth). El CSP ya permite img-src googleusercontent.
+    remotePatterns: [
+      { protocol: "https", hostname: "*.googleusercontent.com" },
+    ],
+  },
   async headers() {
     return [{ source: "/:path*", headers: securityHeaders }];
   },

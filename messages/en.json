@@ -56,11 +56,41 @@
       "en_proceso": "In progress",
       "completada": "Done"
     },
+    "priorityLabel": "Priority",
     "priority": {
       "alta": "High",
       "media": "Medium",
       "baja": "Low"
     }
+  },
+  "chat": {
+    "empty": "No messages yet. Write the first one.",
+    "placeholder": "Write a message…",
+    "placeholderArea": "Message #{area}",
+    "send": "Send",
+    "edited": "(edited)",
+    "deleted": "[message deleted]",
+    "reply": "Reply in thread",
+    "edit": "Edit",
+    "delete": "Delete",
+    "save": "Save",
+    "cancel": "Cancel",
+    "close": "Close",
+    "loading": "Loading…",
+    "thread": "Thread",
+    "noReplies": "Be the first to reply.",
+    "replyPlaceholder": "Reply…",
+    "repliesCount": "{count, plural, one {# reply} other {# replies}}",
+    "hasTask": "Task",
+    "createTask": "Create task",
+    "createTaskTitle": "Create task from message",
+    "createTaskAction": "Create task",
+    "taskTitle": "Title",
+    "taskDescription": "Description",
+    "assignee": "Assignee",
+    "unassigned": "Unassigned",
+    "client": "Client",
+    "noClient": "No client"
   },
   "settings": {
     "title": "Settings",
