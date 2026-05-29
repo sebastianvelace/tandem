@@ -13,10 +13,12 @@ import type { TaskDTO, TaskStatus } from "@/lib/board/types";
 import type { ClientLite, MemberLite } from "@/lib/chat/types";
 import { Card } from "./Card";
 
-/*
- * Columna del tablero (BRD-01): zona soltable + lista ordenable de tarjetas
- * raíz + creación rápida (BRD-09). El id de la zona es `col:<status>`.
- */
+const STATUS_COLOR: Record<TaskStatus, string> = {
+  por_hacer: "#8b7bf7",
+  en_proceso: "#e0b15a",
+  completada: "#5fb88a",
+};
+
 export function Column({
   status,
   tasks,
@@ -25,6 +27,7 @@ export function Column({
   progressFor,
   onOpenTask,
   onQuickAdd,
+  onStatusChange,
   openAddSignal,
 }: {
   status: TaskStatus;
@@ -34,6 +37,7 @@ export function Column({
   progressFor: (id: string) => { total: number; completed: number };
   onOpenTask: (t: TaskDTO) => void;
   onQuickAdd: (status: TaskStatus, title: string) => void;
+  onStatusChange: (task: TaskDTO, newStatus: TaskStatus) => void;
   openAddSignal?: number;
 }) {
   const t = useTranslations("task");
@@ -42,7 +46,6 @@ export function Column({
   const [adding, setAdding] = useState(false);
   const [value, setValue] = useState("");
 
-  // Atajo "N": abrir el alta rápida de esta columna (solo si recibe la señal).
   useEffect(() => {
     if (openAddSignal && openAddSignal > 0) setAdding(true);
   }, [openAddSignal]);
@@ -54,22 +57,36 @@ export function Column({
     setAdding(false);
   }
 
+  const accentColor = STATUS_COLOR[status];
+
   return (
     <div className="flex min-h-0 w-72 shrink-0 flex-col">
-      <div className="mb-2 flex items-center justify-between px-1">
-        <span className="text-xs font-semibold uppercase tracking-wide text-[var(--color-text-muted)]">
+      {/* Cabecera de columna */}
+      <div className="mb-3 flex items-center gap-2 px-1">
+        <span
+          className="h-2 w-2 shrink-0 rounded-full"
+          style={{ backgroundColor: accentColor }}
+        />
+        <span className="flex-1 text-xs font-semibold uppercase tracking-wider text-[var(--color-text-muted)]">
           {t(`status.${status}`)}
         </span>
-        <span className="text-xs text-[var(--color-text-faint)]">
+        <span
+          className="rounded-full px-1.5 py-0.5 text-[10px] font-semibold tabular-nums"
+          style={{
+            backgroundColor: `${accentColor}18`,
+            color: accentColor,
+          }}
+        >
           {tasks.length}
         </span>
       </div>
 
+      {/* Zona droppable */}
       <div
         ref={setNodeRef}
         className={cn(
-          "flex min-h-0 flex-1 flex-col gap-2 overflow-y-auto rounded-[var(--radius)] p-1 transition-colors",
-          isOver && "bg-[var(--color-surface)]",
+          "flex min-h-[120px] flex-1 flex-col gap-2 overflow-y-auto rounded-[var(--radius)] p-1.5 transition-colors duration-150",
+          isOver && "bg-[var(--color-surface)] ring-1 ring-[var(--color-border-strong)]",
         )}
       >
         <SortableContext
@@ -80,17 +97,28 @@ export function Column({
             <Card
               key={task.id}
               task={task}
-              member={
-                task.assigneeUserId
-                  ? memberMap.get(task.assigneeUserId)
-                  : undefined
-              }
+              member={task.assigneeUserId ? memberMap.get(task.assigneeUserId) : undefined}
               client={task.clientId ? clientMap.get(task.clientId) : undefined}
               progress={progressFor(task.id)}
               onOpen={() => onOpenTask(task)}
+              onStatusChange={onStatusChange}
             />
           ))}
         </SortableContext>
+
+        {tasks.length === 0 && !adding && (
+          <div className="flex flex-1 flex-col items-center justify-center gap-1 py-8 text-center">
+            <span
+              className="text-2xl opacity-20"
+              style={{ color: accentColor }}
+            >
+              ○
+            </span>
+            <span className="text-xs text-[var(--color-text-faint)]">
+              {tb("emptyBoard")}
+            </span>
+          </div>
+        )}
 
         {adding ? (
           <textarea
@@ -110,14 +138,14 @@ export function Column({
               }
             }}
             placeholder={tb("quickAddPlaceholder")}
-            className="resize-none rounded-[var(--radius)] border border-[var(--color-border-strong)] bg-[var(--color-surface-2)] p-2 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)]"
+            className="resize-none rounded-[var(--radius)] border border-[var(--color-border-strong)] bg-[var(--color-surface-2)] p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)]"
           />
         ) : (
           <button
             onClick={() => setAdding(true)}
-            className="flex items-center gap-1 rounded-[var(--radius)] px-2 py-1.5 text-xs text-[var(--color-text-faint)] hover:bg-[var(--color-surface)] hover:text-[var(--color-text)]"
+            className="flex items-center gap-1.5 rounded-[var(--radius)] px-2 py-2 text-xs text-[var(--color-text-faint)] transition-colors hover:bg-[var(--color-surface)] hover:text-[var(--color-text-muted)]"
           >
-            <Plus size={14} />
+            <Plus size={13} />
             {tb("addTask")}
           </button>
         )}

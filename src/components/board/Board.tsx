@@ -36,6 +36,7 @@ export function Board({
   onOpenTask,
   onQuickAdd,
   onMove,
+  onStatusChange,
   newTaskSignal,
 }: {
   columns: Record<TaskStatus, TaskDTO[]>;
@@ -45,6 +46,7 @@ export function Board({
   onOpenTask: (t: TaskDTO) => void;
   onQuickAdd: (status: TaskStatus, title: string) => void;
   onMove: (args: MoveArgs) => void;
+  onStatusChange: (task: TaskDTO, newStatus: TaskStatus) => void;
   newTaskSignal?: number;
 }) {
   const sensors = useSensors(
@@ -128,6 +130,7 @@ export function Board({
             progressFor={progressFor}
             onOpenTask={onOpenTask}
             onQuickAdd={onQuickAdd}
+            onStatusChange={onStatusChange}
             openAddSignal={status === "por_hacer" ? newTaskSignal : undefined}
           />
         ))}

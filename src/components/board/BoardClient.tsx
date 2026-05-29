@@ -154,6 +154,10 @@ export function BoardClient({
     }
   }
 
+  async function handleSwipeStatus(task: TaskDTO, newStatus: TaskStatus) {
+    void handleUpdate({ id: task.id, status: newStatus });
+  }
+
   async function handleMove(args: MoveArgs) {
     const current = tasks.find((x) => x.id === args.id);
     const prevPos = args.prevId
@@ -263,6 +267,7 @@ export function BoardClient({
               onOpenTask={(t) => setSelectedId(t.id)}
               onQuickAdd={(status, title) => void handleCreate({ status, title })}
               onMove={handleMove}
+              onStatusChange={handleSwipeStatus}
               newTaskSignal={newTaskSignal}
             />
           ) : (
