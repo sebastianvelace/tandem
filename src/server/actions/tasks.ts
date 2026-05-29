@@ -37,8 +37,8 @@ export async function updateTaskAction(input: unknown) {
     if (!parsed.success) {
       throw new AppError("VALIDATION", "Datos inválidos", flatten(parsed.error));
     }
-    const { workspaceId } = await resolveActiveWorkspace();
-    const task = await tasksService.updateTask(workspaceId, parsed.data);
+    const { workspaceId, userId } = await resolveActiveWorkspace();
+    const task = await tasksService.updateTask(workspaceId, parsed.data, userId);
     revalidatePath(`/areas/${task.areaId}`);
     return task;
   });

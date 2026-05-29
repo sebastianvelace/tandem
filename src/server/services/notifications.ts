@@ -1,11 +1,106 @@
 import "server-only";
+import { and, desc, eq, isNull, sql } from "drizzle-orm";
 import { db } from "@/db/client";
 import { notifications, type Notification } from "@/db/schema";
 
 /*
- * Servicio base de notificaciones (S2-T05). En Sprint 2 solo se ESCRIBE la
- * fila (thread_reply); la campana/realtime/marcar-leída llegan en S5-T01.
+ * Servicio de notificaciones. La escritura (createNotification) se usa desde
+ * S2 (thread_reply) y S3/S5 (task_assigned, etc.). La lectura/marcado y el
+ * realtime de la campana son S5-T01 (NOT-01..05).
  */
+
+export type NotificationDTO = {
+  id: string;
+  type: Notification["type"];
+  entityType: string;
+  entityId: string;
+  actorUserId: string | null;
+  payload: Record<string, unknown> | null;
+  readAt: string | null;
+  createdAt: string;
+};
+
+function toDTO(n: Notification): NotificationDTO {
+  return {
+    id: n.id,
+    type: n.type,
+    entityType: n.entityType,
+    entityId: n.entityId,
+    actorUserId: n.actorUserId,
+    payload: (n.payload as Record<string, unknown> | null) ?? null,
+    readAt: n.readAt ? n.readAt.toISOString() : null,
+    createdAt: n.createdAt.toISOString(),
+  };
+}
+
+export async function listNotifications(
+  workspaceId: string,
+  userId: string,
+  limit = 30,
+): Promise<NotificationDTO[]> {
+  const rows = await db
+    .select()
+    .from(notifications)
+    .where(
+      and(
+        eq(notifications.workspaceId, workspaceId),
+        eq(notifications.recipientUserId, userId),
+      ),
+    )
+    .orderBy(desc(notifications.createdAt))
+    .limit(limit);
+  return rows.map(toDTO);
+}
+
+export async function unreadCount(
+  workspaceId: string,
+  userId: string,
+): Promise<number> {
+  const rows = await db
+    .select({ n: sql<number>`count(*)::int` })
+    .from(notifications)
+    .where(
+      and(
+        eq(notifications.workspaceId, workspaceId),
+        eq(notifications.recipientUserId, userId),
+        isNull(notifications.readAt),
+      ),
+    );
+  return rows[0]?.n ?? 0;
+}
+
+export async function markRead(
+  workspaceId: string,
+  userId: string,
+  id: string,
+): Promise<void> {
+  await db
+    .update(notifications)
+    .set({ readAt: new Date() })
+    .where(
+      and(
+        eq(notifications.id, id),
+        eq(notifications.workspaceId, workspaceId),
+        eq(notifications.recipientUserId, userId),
+      ),
+    );
+}
+
+export async function markAllRead(
+  workspaceId: string,
+  userId: string,
+): Promise<void> {
+  await db
+    .update(notifications)
+    .set({ readAt: new Date() })
+    .where(
+      and(
+        eq(notifications.workspaceId, workspaceId),
+        eq(notifications.recipientUserId, userId),
+        isNull(notifications.readAt),
+      ),
+    );
+}
 
 type CreateNotificationInput = {
   workspaceId: string;

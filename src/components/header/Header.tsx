@@ -3,8 +3,9 @@
 import { useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
-import { Bell, LogOut, Languages } from "lucide-react";
+import { LogOut, Languages } from "lucide-react";
 import { logoutAction, setLocaleAction } from "@/server/actions/session";
+import { NotificationBell } from "@/components/notifications/NotificationBell";
 import type { User } from "@/db/schema";
 
 /*
@@ -43,12 +44,7 @@ export function Header({ user, title }: { user: User; title?: string }) {
           <span className="uppercase">{locale}</span>
         </button>
 
-        <button
-          aria-label="Notificaciones"
-          className="flex h-9 w-9 items-center justify-center rounded-md text-[var(--color-text-muted)] transition-colors hover:bg-[var(--color-surface-2)] hover:text-[var(--color-text)]"
-        >
-          <Bell size={16} />
-        </button>
+        <NotificationBell userId={user.id} />
 
         {user.avatarUrl ? (
           // eslint-disable-next-line @next/next/no-img-element

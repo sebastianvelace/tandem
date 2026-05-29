@@ -1,9 +1,10 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import { LayoutGrid, List, Search } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useHotkeys } from "@/lib/hotkeys";
 import type { TaskDTO, TaskStatus } from "@/lib/board/types";
 import type { ClientLite, MemberLite } from "@/lib/chat/types";
 import {
@@ -66,6 +67,27 @@ export function BoardClient({
   const [toast, setToast] = useState<{ parentId: string; label: string } | null>(
     null,
   );
+  const [newTaskSignal, setNewTaskSignal] = useState(0);
+  const searchRef = useRef<HTMLInputElement>(null);
+
+  // Atajos (UX-10): "/" búsqueda, "N" nueva tarea, "Esc" cerrar panel.
+  useHotkeys({
+    "/": (e) => {
+      e.preventDefault();
+      searchRef.current?.focus();
+    },
+    n: () => {
+      setView("board");
+      setNewTaskSignal((s) => s + 1);
+    },
+    N: () => {
+      setView("board");
+      setNewTaskSignal((s) => s + 1);
+    },
+    Escape: () => {
+      if (selectedId) setSelectedId(null);
+    },
+  });
 
   const memberMap = useMemo(
     () => new Map(members.map((m) => [m.id, m])),
@@ -212,6 +234,7 @@ export function BoardClient({
               className="pointer-events-none absolute left-2 top-1/2 -translate-y-1/2 text-[var(--color-text-faint)]"
             />
             <input
+              ref={searchRef}
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder={t("searchPlaceholder")}
@@ -240,6 +263,7 @@ export function BoardClient({
               onOpenTask={(t) => setSelectedId(t.id)}
               onQuickAdd={(status, title) => void handleCreate({ status, title })}
               onMove={handleMove}
+              newTaskSignal={newTaskSignal}
             />
           ) : (
             <ListView

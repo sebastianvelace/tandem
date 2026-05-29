@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
-import { Plus, Building2 } from "lucide-react";
+import { Plus, Building2, Search } from "lucide-react";
 import type { Client } from "@/db/schema";
 import { ClientForm } from "./ClientForm";
 
@@ -16,14 +16,32 @@ export function ClientDirectory({ initial }: { initial: Client[] }) {
   const [clients, setClients] = useState<Client[]>(initial);
   const [showInactive, setShowInactive] = useState(false);
   const [creating, setCreating] = useState(false);
+  const [query, setQuery] = useState("");
 
-  const visible = clients.filter((c) => showInactive || c.isActive);
+  const q = query.trim().toLowerCase();
+  const visible = clients.filter(
+    (c) =>
+      (showInactive || c.isActive) &&
+      (q === "" ||
+        [c.name, c.company, c.email]
+          .filter(Boolean)
+          .some((v) => v!.toLowerCase().includes(q))),
+  );
 
   return (
     <div className="mx-auto h-full w-full max-w-4xl px-6 py-6">
       <div className="mb-4 flex items-center justify-between">
         <h1 className="text-lg font-semibold">{t("title")}</h1>
         <div className="flex items-center gap-3">
+          <div className="relative">
+            <Search size={13} className="pointer-events-none absolute left-2 top-1/2 -translate-y-1/2 text-[var(--color-text-faint)]" />
+            <input
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder={t("search")}
+              className="h-8 w-48 rounded-md border border-[var(--color-border-strong)] bg-[var(--color-surface-2)] pl-7 pr-2 text-xs focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)]"
+            />
+          </div>
           <label className="flex items-center gap-1.5 text-xs text-[var(--color-text-muted)]">
             <input
               type="checkbox"

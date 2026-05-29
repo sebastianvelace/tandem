@@ -144,6 +144,7 @@
     "cancel": "Cancelar",
     "save": "Guardar",
     "showInactive": "Mostrar inactivos",
+    "search": "Buscar cliente…",
     "empty": "Aún no hay clientes.",
     "inactive": "Inactivo",
     "deactivate": "Desactivar",
@@ -169,6 +170,17 @@
     "next": "Mes siguiente",
     "today": "Hoy"
   },
+  "notifications": {
+    "title": "Notificaciones",
+    "markAll": "Marcar todas como leídas",
+    "empty": "No tienes notificaciones.",
+    "type": {
+      "thread_reply": "Respondieron en un hilo",
+      "task_assigned": "Te asignaron una tarea",
+      "task_status_changed": "Cambió el estado de una tarea",
+      "subtasks_completed": "Se completaron las subtareas"
+    }
+  },
   "settings": {
     "title": "Configuración",
     "profile": "Perfil",
@@ -183,7 +195,9 @@
     "connectCalendar": "Conectar Google Calendar",
     "calendarConnected": "Conectado",
     "calendarNotConnected": "No conectado",
-    "disconnect": "Desconectar"
+    "disconnect": "Desconectar",
+    "dataExport": "Exportar datos",
+    "exportWorkspace": "Exportar workspace (JSON)"
   },
   "emptyStates": {
     "noAreas": "Aún no hay áreas. Crea la primera.",

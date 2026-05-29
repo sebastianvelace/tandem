@@ -4,6 +4,7 @@ import { db } from "@/db/client";
 import { areas, clients, messages, tasks, type Task } from "@/db/schema";
 import { AppError } from "@/server/auth/errors";
 import { removeTaskEvent, syncTaskDueDate } from "@/server/calendar/sync";
+import { createNotification } from "@/server/services/notifications";
 import type { TaskDTO } from "@/lib/board/types";
 import type {
   CreateTaskFromMessageInput,
@@ -225,12 +226,24 @@ export async function createTask(
     })
     .returning();
   if (created!.dueDate) await syncTaskDueDate(created!);
+  if (created!.assigneeUserId && created!.assigneeUserId !== userId) {
+    await createNotification({
+      workspaceId,
+      recipientUserId: created!.assigneeUserId,
+      type: "task_assigned",
+      entityType: "task",
+      entityId: created!.id,
+      actorUserId: userId,
+      payload: { areaId: created!.areaId, title: created!.title },
+    });
+  }
   return toDTO(created!);
 }
 
 export async function updateTask(
   workspaceId: string,
   input: UpdateTaskInput,
+  actorUserId?: string,
 ): Promise<TaskDTO> {
   const existing = await getTaskInWorkspace(input.id, workspaceId);
   if (input.clientId) await assertClientInWorkspace(input.clientId, workspaceId);
@@ -259,6 +272,23 @@ export async function updateTask(
     .returning();
   // Sync side-effect (ADR-007): refleja due_date/archivado en Google Calendar.
   await syncTaskDueDate(updated!);
+  // NOT-02: notificar al nuevo responsable si cambió la asignación.
+  if (
+    input.assigneeUserId !== undefined &&
+    updated!.assigneeUserId &&
+    updated!.assigneeUserId !== existing.assigneeUserId &&
+    updated!.assigneeUserId !== actorUserId
+  ) {
+    await createNotification({
+      workspaceId,
+      recipientUserId: updated!.assigneeUserId,
+      type: "task_assigned",
+      entityType: "task",
+      entityId: updated!.id,
+      actorUserId: actorUserId ?? null,
+      payload: { areaId: updated!.areaId, title: updated!.title },
+    });
+  }
   return toDTO(updated!);
 }
 

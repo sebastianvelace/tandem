@@ -144,6 +144,7 @@
     "cancel": "Cancel",
     "save": "Save",
     "showInactive": "Show inactive",
+    "search": "Search client…",
     "empty": "No clients yet.",
     "inactive": "Inactive",
     "deactivate": "Deactivate",
@@ -169,6 +170,17 @@
     "next": "Next month",
     "today": "Today"
   },
+  "notifications": {
+    "title": "Notifications",
+    "markAll": "Mark all as read",
+    "empty": "You have no notifications.",
+    "type": {
+      "thread_reply": "Someone replied in a thread",
+      "task_assigned": "You were assigned a task",
+      "task_status_changed": "A task status changed",
+      "subtasks_completed": "Subtasks were completed"
+    }
+  },
   "settings": {
     "title": "Settings",
     "profile": "Profile",
@@ -183,7 +195,9 @@
     "connectCalendar": "Connect Google Calendar",
     "calendarConnected": "Connected",
     "calendarNotConnected": "Not connected",
-    "disconnect": "Disconnect"
+    "disconnect": "Disconnect",
+    "dataExport": "Data export",
+    "exportWorkspace": "Export workspace (JSON)"
   },
   "emptyStates": {
     "noAreas": "No areas yet. Create the first one.",

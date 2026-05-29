@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDroppable } from "@dnd-kit/core";
 import {
   SortableContext,
@@ -25,6 +25,7 @@ export function Column({
   progressFor,
   onOpenTask,
   onQuickAdd,
+  openAddSignal,
 }: {
   status: TaskStatus;
   tasks: TaskDTO[];
@@ -33,12 +34,18 @@ export function Column({
   progressFor: (id: string) => { total: number; completed: number };
   onOpenTask: (t: TaskDTO) => void;
   onQuickAdd: (status: TaskStatus, title: string) => void;
+  openAddSignal?: number;
 }) {
   const t = useTranslations("task");
   const tb = useTranslations("board");
   const { setNodeRef, isOver } = useDroppable({ id: `col:${status}` });
   const [adding, setAdding] = useState(false);
   const [value, setValue] = useState("");
+
+  // Atajo "N": abrir el alta rápida de esta columna (solo si recibe la señal).
+  useEffect(() => {
+    if (openAddSignal && openAddSignal > 0) setAdding(true);
+  }, [openAddSignal]);
 
   function submit() {
     const title = value.trim();

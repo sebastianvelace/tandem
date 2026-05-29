@@ -4,6 +4,7 @@ import { listMembersAction } from "@/server/actions/invitations";
 import { getCalendarStatusAction } from "@/server/actions/calendar";
 import { InviteMember } from "@/components/settings/InviteMember";
 import { CalendarConnection } from "@/components/settings/CalendarConnection";
+import { ExportWorkspace } from "@/components/settings/ExportWorkspace";
 
 /* Configuración → Workspace: miembros + invitar (solo admin gestiona). */
 export default async function WorkspaceSettingsPage() {
@@ -53,6 +54,15 @@ export default async function WorkspaceSettingsPage() {
             {t("inviteMember")}
           </h2>
           <InviteMember />
+        </section>
+      )}
+
+      {ctx.role === "admin" && (
+        <section className="mt-8">
+          <h2 className="mb-3 text-sm font-medium text-[var(--color-text-muted)]">
+            {t("dataExport")}
+          </h2>
+          <ExportWorkspace />
         </section>
       )}
     </div>
