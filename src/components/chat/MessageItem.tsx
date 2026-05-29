@@ -13,7 +13,6 @@ import { cn } from "@/lib/utils";
 import { formatTime } from "@/i18n/format";
 import type { Locale } from "@/i18n/config";
 import type { MemberLite, MessageDTO } from "@/lib/chat/types";
-import { Avatar } from "./Avatar";
 import { MessageBody } from "./MessageBody";
 
 /*
@@ -63,8 +62,7 @@ export function MessageItem({
   }
 
   return (
-    <div className="group flex gap-3 px-4 py-1.5 hover:bg-[var(--color-surface)]">
-      <Avatar member={author} size={34} className="mt-0.5" />
+    <div className="group flex px-4 py-1.5 hover:bg-[var(--color-surface)]">
       <div className="min-w-0 flex-1">
         <div className="flex items-baseline gap-2">
           <span className="text-sm font-semibold text-[var(--color-text)]">

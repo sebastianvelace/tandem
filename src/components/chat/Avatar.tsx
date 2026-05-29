@@ -1,8 +1,7 @@
-import Image from "next/image";
 import { cn } from "@/lib/utils";
 import type { MemberLite } from "@/lib/chat/types";
 
-/** Avatar circular con imagen de Google o inicial de respaldo. */
+/** Inicial del miembro (sin foto de perfil). */
 export function Avatar({
   member,
   size = 32,
@@ -15,17 +14,6 @@ export function Avatar({
   const label = member?.name ?? member?.email ?? "?";
   const initial = label.charAt(0).toUpperCase();
 
-  if (member?.avatarUrl) {
-    return (
-      <Image
-        src={member.avatarUrl}
-        alt={label}
-        width={size}
-        height={size}
-        className={cn("shrink-0 rounded-full object-cover", className)}
-      />
-    );
-  }
   return (
     <span
       style={{ width: size, height: size }}
