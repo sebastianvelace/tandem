@@ -25,9 +25,9 @@ const TASK_STATUSES: TaskStatus[] = ["por_hacer", "en_proceso", "completada"];
 const SWIPE_THRESHOLD = 72;
 
 const STATUS_COLOR: Record<TaskStatus, string> = {
-  por_hacer: "#6b7280",
-  en_proceso: "#d97706",
-  completada: "#16a34a",
+  por_hacer: "rgba(240,244,255,0.35)",
+  en_proceso: "#f59e0b",
+  completada: "#34d399",
 };
 
 export function Card({
@@ -58,7 +58,6 @@ export function Card({
     isDragging,
   } = useSortable({ id: task.id });
 
-  /* Swipe state — refs para no re-renderizar durante el movimiento */
   const startX = useRef(0);
   const isPointerDown = useRef(false);
   const [swipeDelta, setSwipeDelta] = useState(0);
@@ -67,7 +66,7 @@ export function Card({
   const dndStyle = {
     transform: CSS.Transform.toString(transform),
     transition: swiping ? undefined : transition,
-    opacity: isDragging ? 0.35 : 1,
+    opacity: isDragging ? 0.3 : 1,
   };
 
   const statusIdx = TASK_STATUSES.indexOf(task.status);
@@ -84,7 +83,6 @@ export function Card({
   const swipingLeft = swipeDelta < -8;
   const swipeActivated = swipeRatio >= 1;
 
-  /* ---- gestos ---- */
   function onPointerDown(e: React.PointerEvent<HTMLDivElement>) {
     if ((e.target as HTMLElement).closest("[data-drag-handle]")) return;
     startX.current = e.clientX;
@@ -107,14 +105,12 @@ export function Card({
     if (!isPointerDown.current) return;
     isPointerDown.current = false;
     const delta = e.clientX - startX.current;
-
     if (Math.abs(delta) >= SWIPE_THRESHOLD && onStatusChange) {
       if (delta > 0 && nextStatus) onStatusChange(task, nextStatus);
       else if (delta < 0 && prevStatus) onStatusChange(task, prevStatus);
     } else if (Math.abs(delta) < 6) {
       onOpen();
     }
-
     setSwipeDelta(0);
     setSwiping(false);
   }
@@ -133,57 +129,59 @@ export function Card({
       style={dndStyle}
       {...attributes}
       className={cn(
-        "group relative overflow-hidden rounded-[var(--radius)] border border-[var(--color-border)] bg-[var(--color-surface-2)] shadow-sm",
-        "transition-[border-color,box-shadow] duration-150",
-        "hover:border-[var(--color-border-strong)] hover:shadow-md",
-        isDragging && "shadow-xl ring-1 ring-[var(--color-border-strong)]",
-        task.status === "completada" && "opacity-75",
+        "glass-sm group relative overflow-hidden rounded-[var(--radius)]",
+        "border border-white/[0.08] bg-white/[0.04]",
+        "shadow-[0_2px_12px_rgba(0,0,0,0.4)]",
+        "transition-all duration-150",
+        "hover:border-white/[0.14] hover:bg-white/[0.07] hover:shadow-[0_4px_20px_rgba(0,0,0,0.5)]",
+        isDragging && "shadow-[0_8px_32px_rgba(0,0,0,0.6)] ring-1 ring-white/20",
+        task.status === "completada" && "opacity-60",
       )}
     >
-      {/* Borde izquierdo de color por estado */}
+      {/* Borde izquierdo de estado */}
       <div
-        className="absolute inset-y-0 left-0 w-[3px] rounded-l-[var(--radius)]"
+        className="absolute inset-y-0 left-0 w-[2px] rounded-l-[var(--radius)]"
         style={{ backgroundColor: accentColor }}
       />
 
-      {/* Fondo swipe derecha */}
+      {/* Overlay swipe derecha */}
       {swiping && swipingRight && nextStatus && (
         <div
           className="pointer-events-none absolute inset-0 flex items-center gap-1.5 pl-5"
           style={{
-            background: `linear-gradient(90deg, ${STATUS_COLOR[nextStatus]}28 0%, transparent 70%)`,
+            background: `linear-gradient(90deg, ${STATUS_COLOR[nextStatus]}22 0%, transparent 70%)`,
             opacity: swipeRatio,
           }}
         >
-          <ChevronRight size={15} style={{ color: STATUS_COLOR[nextStatus] }} />
+          <ChevronRight size={14} style={{ color: STATUS_COLOR[nextStatus] }} />
           <span className="text-xs font-medium" style={{ color: STATUS_COLOR[nextStatus] }}>
             {ts(`status.${nextStatus}`)}
           </span>
         </div>
       )}
 
-      {/* Fondo swipe izquierda */}
+      {/* Overlay swipe izquierda */}
       {swiping && swipingLeft && prevStatus && (
         <div
           className="pointer-events-none absolute inset-0 flex items-center justify-end gap-1.5 pr-5"
           style={{
-            background: `linear-gradient(270deg, ${STATUS_COLOR[prevStatus]}28 0%, transparent 70%)`,
+            background: `linear-gradient(270deg, ${STATUS_COLOR[prevStatus]}22 0%, transparent 70%)`,
             opacity: swipeRatio,
           }}
         >
           <span className="text-xs font-medium" style={{ color: STATUS_COLOR[prevStatus] }}>
             {ts(`status.${prevStatus}`)}
           </span>
-          <ChevronLeft size={15} style={{ color: STATUS_COLOR[prevStatus] }} />
+          <ChevronLeft size={14} style={{ color: STATUS_COLOR[prevStatus] }} />
         </div>
       )}
 
-      {/* Flash de confirmación al activar el umbral */}
+      {/* Flash al activar umbral */}
       {swipeActivated && (
         <div
           className="pointer-events-none absolute inset-0 rounded-[var(--radius)]"
           style={{
-            boxShadow: `inset 0 0 0 2px ${swipingRight ? (nextStatus ? STATUS_COLOR[nextStatus] : "transparent") : prevStatus ? STATUS_COLOR[prevStatus] : "transparent"}`,
+            boxShadow: `inset 0 0 0 1.5px ${swipingRight ? (nextStatus ? STATUS_COLOR[nextStatus] : "transparent") : prevStatus ? STATUS_COLOR[prevStatus] : "transparent"}`,
           }}
         />
       )}
@@ -200,32 +198,27 @@ export function Card({
         onPointerUp={onPointerUp}
         onPointerCancel={onPointerCancel}
       >
-        {/* Cuerpo principal */}
-        <div className="flex-1 cursor-pointer py-3 pr-2 min-w-0 select-none">
+        <div className="min-w-0 flex-1 cursor-pointer select-none py-3 pr-2">
           <div className="flex items-start gap-2">
             <PriorityDot priority={task.priority} />
-            <p
-              className={cn(
-                "min-w-0 flex-1 text-sm leading-snug text-[var(--color-text)]",
-                task.status === "completada" && "text-[var(--color-text-muted)] line-through",
-              )}
-            >
+            <p className={cn(
+              "min-w-0 flex-1 text-sm leading-snug text-[var(--color-text)]",
+              task.status === "completada" && "text-[var(--color-text-muted)] line-through",
+            )}>
               {task.title}
             </p>
           </div>
 
-          {/* Barra de progreso de subtareas */}
           {progress.total > 0 && (
             <div className="mt-2.5 flex items-center gap-2">
-              <div className="h-1 flex-1 overflow-hidden rounded-full bg-[var(--color-border-strong)]">
+              <div className="h-[2px] flex-1 overflow-hidden rounded-full bg-white/[0.08]">
                 <div
                   className="h-full rounded-full transition-all duration-300"
                   style={{
                     width: `${(progress.completed / progress.total) * 100}%`,
-                    backgroundColor:
-                      progress.completed === progress.total
-                        ? STATUS_COLOR.completada
-                        : accentColor,
+                    backgroundColor: progress.completed === progress.total
+                      ? STATUS_COLOR.completada
+                      : accentColor,
                   }}
                 />
               </div>
@@ -236,50 +229,42 @@ export function Card({
             </div>
           )}
 
-          {/* Meta-datos */}
           <div className="mt-2 flex flex-wrap items-center gap-x-2 gap-y-1">
             {task.dueDate && (
-              <span
-                className={cn(
-                  "inline-flex items-center gap-1 text-xs",
-                  overdue
-                    ? "font-medium text-[var(--color-priority-alta)]"
-                    : "text-[var(--color-text-faint)]",
-                )}
-              >
-                <CalendarClock size={11} />
+              <span className={cn(
+                "inline-flex items-center gap-1 text-xs",
+                overdue
+                  ? "font-medium text-[var(--color-priority-alta)]"
+                  : "text-[var(--color-text-faint)]",
+              )}>
+                <CalendarClock size={10} />
                 {formatDate(task.dueDate, locale)}
               </span>
             )}
             {client && (
               <span className="inline-flex max-w-[9rem] items-center gap-1 truncate text-xs text-[var(--color-text-faint)]">
-                <GitBranch size={11} />
+                <GitBranch size={10} />
                 {client.name}
               </span>
             )}
             {task.sourceMessageId && (
               <span className="text-[var(--color-text-faint)]" title={t("fromMessage")}>
-                <MessageSquare size={11} />
+                <MessageSquare size={10} />
               </span>
             )}
           </div>
         </div>
 
-        {/* Columna derecha: avatar + handle */}
+        {/* Avatar + handle */}
         <div className="flex flex-col items-center justify-between py-2 pr-2 pl-1">
-          {member ? (
-            <Avatar member={member} size={22} />
-          ) : (
-            <span />
-          )}
+          {member ? <Avatar member={member} size={20} /> : <span />}
           <div
             data-drag-handle
             {...listeners}
-            className="cursor-grab touch-none rounded p-0.5 text-[var(--color-text-faint)] opacity-0 transition-opacity duration-100 group-hover:opacity-60 active:cursor-grabbing"
+            className="cursor-grab touch-none rounded p-0.5 text-[var(--color-text-faint)] opacity-0 transition-opacity duration-100 group-hover:opacity-50 active:cursor-grabbing"
             onClick={(e) => e.stopPropagation()}
-            title="Arrastrar"
           >
-            <GripVertical size={13} />
+            <GripVertical size={12} />
           </div>
         </div>
       </div>

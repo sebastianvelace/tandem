@@ -52,8 +52,8 @@ export function NotificationBell({ userId }: { userId: string }) {
       </button>
 
       {open && (
-        <div className="animate-scale-in absolute right-0 top-11 z-50 w-80 overflow-hidden rounded-[var(--radius)] border border-[var(--color-border)] bg-[var(--color-surface)] shadow-xl">
-          <div className="flex items-center justify-between border-b border-[var(--color-border)] px-4 py-2.5">
+        <div className="animate-scale-in glass absolute right-0 top-11 z-50 w-80 overflow-hidden rounded-[var(--radius)] border border-white/[0.1] bg-black/70 shadow-[0_8px_40px_rgba(0,0,0,0.8)]">
+          <div className="flex items-center justify-between border-b border-white/[0.07] px-4 py-2.5">
             <span className="text-sm font-semibold">{t("title")}</span>
             {unread > 0 && (
               <button onClick={() => void markAll()} className="text-xs text-[var(--color-accent-hover)] hover:underline">
@@ -72,8 +72,8 @@ export function NotificationBell({ userId }: { userId: string }) {
                   <button
                     onClick={() => openContext(n.payload, n.id, Boolean(n.readAt))}
                     className={cn(
-                      "flex w-full flex-col gap-0.5 border-b border-[var(--color-border)] px-4 py-2.5 text-left hover:bg-[var(--color-surface-2)]",
-                      !n.readAt && "bg-[var(--color-accent-soft)]/40",
+                      "flex w-full flex-col gap-0.5 border-b border-white/[0.06] px-4 py-2.5 text-left hover:bg-white/[0.06]",
+                      !n.readAt && "bg-white/[0.05]",
                     )}
                   >
                     <span className="flex items-center gap-2 text-sm">

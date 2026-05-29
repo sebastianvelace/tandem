@@ -58,8 +58,8 @@ export function TaskDetail({
   }
 
   return (
-    <aside className="animate-slide-right flex h-full w-96 shrink-0 flex-col border-l border-[var(--color-border)] bg-[var(--color-bg)]">
-      <div className="flex h-12 items-center justify-between border-b border-[var(--color-border)] px-4">
+    <aside className="animate-slide-right glass flex h-full w-96 shrink-0 flex-col border-l border-white/[0.07] bg-black/60">
+      <div className="flex h-12 items-center justify-between border-b border-white/[0.07] px-4">
         <span className="text-sm font-semibold">{t("taskDetail")}</span>
         <div className="flex items-center gap-1">
           {task.parentId === null && (

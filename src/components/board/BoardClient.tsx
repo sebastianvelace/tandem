@@ -215,8 +215,8 @@ export function BoardClient({
     <div className="flex h-full min-w-0 flex-1">
       <div className="relative flex min-w-0 flex-1 flex-col">
         {/* Toolbar */}
-        <div className="flex flex-wrap items-center gap-3 border-b border-[var(--color-border)] px-4 py-2">
-          <div className="flex items-center rounded-md border border-[var(--color-border-strong)]">
+        <div className="flex flex-wrap items-center gap-3 border-b border-white/[0.06] px-4 py-2">
+          <div className="flex items-center rounded-md border border-white/[0.1]">
             <ToolbarToggle active={view === "board"} onClick={() => setView("board")}>
               <LayoutGrid size={14} /> {t("board")}
             </ToolbarToggle>
@@ -227,7 +227,7 @@ export function BoardClient({
 
           <button
             onClick={() => setSort(sort === "manual" ? "priority" : "manual")}
-            className="rounded-md border border-[var(--color-border-strong)] px-2 py-1 text-xs text-[var(--color-text-muted)] hover:text-[var(--color-text)]"
+            className="rounded-md border border-white/[0.1] px-2 py-1 text-xs text-[var(--color-text-muted)] hover:bg-white/[0.06] hover:text-[var(--color-text)]"
           >
             {sort === "manual" ? t("orderManual") : t("orderPriority")}
           </button>
@@ -242,7 +242,7 @@ export function BoardClient({
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder={t("searchPlaceholder")}
-              className="h-7 w-44 rounded-md border border-[var(--color-border-strong)] bg-[var(--color-surface-2)] pl-7 pr-2 text-xs focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)]"
+              className="h-7 w-44 rounded-md border border-white/[0.1] bg-white/[0.05] pl-7 pr-2 text-xs focus:outline-none focus:ring-1 focus:ring-white/30"
             />
           </div>
 
@@ -338,8 +338,8 @@ function ToolbarToggle({
       className={cn(
         "flex items-center gap-1 px-2.5 py-1 text-xs first:rounded-l-md last:rounded-r-md",
         active
-          ? "bg-[var(--color-accent-soft)] text-[var(--color-text)]"
-          : "text-[var(--color-text-muted)] hover:text-[var(--color-text)]",
+          ? "bg-white/[0.12] text-white"
+          : "text-[var(--color-text-muted)] hover:bg-white/[0.06] hover:text-[var(--color-text)]",
       )}
     >
       {children}

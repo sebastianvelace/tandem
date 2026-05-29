@@ -8,11 +8,6 @@ import { cn } from "@/lib/utils";
 import type { Area } from "@/db/schema";
 import { CreateAreaButton } from "./CreateAreaButton";
 
-/*
- * Sidebar izquierda (§6.6): Áreas (navegación principal) + secciones
- * secundarias (Clientes, Calendario, Archivo). Clientes NO es navegación
- * principal (CLI-08): vive aquí, debajo de las áreas.
- */
 export function Sidebar({
   areas,
   workspaceName,
@@ -24,14 +19,16 @@ export function Sidebar({
   const pathname = usePathname();
 
   return (
-    <aside className="flex h-screen w-60 shrink-0 flex-col border-r border-[var(--color-border)] bg-[var(--color-surface)]">
-      <div className="flex h-14 items-center px-4">
-        <span className="truncate text-sm font-semibold">{workspaceName}</span>
+    <aside className="glass flex h-screen w-56 shrink-0 flex-col border-r border-white/[0.06] bg-black/50">
+      <div className="flex h-14 items-center border-b border-white/[0.05] px-4">
+        <span className="truncate text-sm font-semibold tracking-tight text-[var(--color-text)]">
+          {workspaceName}
+        </span>
       </div>
 
-      <nav className="flex-1 overflow-y-auto px-2 pb-4">
+      <nav className="flex-1 overflow-y-auto px-2 pb-4 pt-2">
         <SectionLabel>{t("areas")}</SectionLabel>
-        <ul className="mb-4 space-y-0.5">
+        <ul className="mb-3 space-y-0.5">
           {areas.map((area) => {
             const href = `/areas/${area.id}`;
             const active = pathname === href;
@@ -42,12 +39,12 @@ export function Sidebar({
                   className={cn(
                     "flex items-center gap-2 rounded-md px-2 py-1.5 text-sm transition-colors duration-150",
                     active
-                      ? "bg-[var(--color-accent-soft)] text-[var(--color-text)]"
-                      : "text-[var(--color-text-muted)] hover:bg-[var(--color-surface-2)] hover:text-[var(--color-text)]",
+                      ? "bg-white/[0.1] text-white"
+                      : "text-[var(--color-text-muted)] hover:bg-white/[0.06] hover:text-[var(--color-text)]",
                   )}
                 >
                   <Hash
-                    size={15}
+                    size={14}
                     style={area.color ? { color: area.color } : undefined}
                   />
                   <span className="truncate">{area.name}</span>
@@ -58,16 +55,16 @@ export function Sidebar({
         </ul>
         <CreateAreaButton />
 
-        <div className="my-4 border-t border-[var(--color-border)]" />
+        <div className="my-3 border-t border-white/[0.05]" />
 
         <ul className="space-y-0.5">
-          <SecondaryLink href="/clients" active={pathname.startsWith("/clients")} icon={<Users size={15} />}>
+          <SecondaryLink href="/clients" active={pathname.startsWith("/clients")} icon={<Users size={14} />}>
             {t("clients")}
           </SecondaryLink>
-          <SecondaryLink href="/calendar" active={pathname.startsWith("/calendar")} icon={<Calendar size={15} />}>
+          <SecondaryLink href="/calendar" active={pathname.startsWith("/calendar")} icon={<Calendar size={14} />}>
             {t("calendar")}
           </SecondaryLink>
-          <SecondaryLink href="/archive" active={pathname.startsWith("/archive")} icon={<Archive size={15} />}>
+          <SecondaryLink href="/archive" active={pathname.startsWith("/archive")} icon={<Archive size={14} />}>
             {t("archive")}
           </SecondaryLink>
         </ul>
@@ -78,7 +75,7 @@ export function Sidebar({
 
 function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
-    <p className="px-2 py-2 text-xs font-medium uppercase tracking-wide text-[var(--color-text-faint)]">
+    <p className="px-2 pb-1.5 pt-1 text-[10px] font-semibold uppercase tracking-widest text-[var(--color-text-faint)]">
       {children}
     </p>
   );
@@ -102,8 +99,8 @@ function SecondaryLink({
         className={cn(
           "flex items-center gap-2 rounded-md px-2 py-1.5 text-sm transition-colors duration-150",
           active
-            ? "bg-[var(--color-accent-soft)] text-[var(--color-text)]"
-            : "text-[var(--color-text-muted)] hover:bg-[var(--color-surface-2)] hover:text-[var(--color-text)]",
+            ? "bg-white/[0.1] text-white"
+            : "text-[var(--color-text-muted)] hover:bg-white/[0.06] hover:text-[var(--color-text)]",
         )}
       >
         {icon}

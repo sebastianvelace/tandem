@@ -33,8 +33,8 @@ export function AreaView({
   return (
     <div className="flex h-full min-w-0">
       {/* Panel de chat — columna izquierda fija */}
-      <div className="flex w-80 shrink-0 flex-col border-r border-[var(--color-border)]">
-        <div className="flex h-11 shrink-0 items-center gap-2 border-b border-[var(--color-border)] px-4">
+      <div className="flex w-80 shrink-0 flex-col border-r border-white/[0.06]">
+        <div className="flex h-11 shrink-0 items-center gap-2 border-b border-white/[0.06] px-4">
           <Hash size={14} className="text-[var(--color-text-faint)]" />
           <span className="truncate text-sm font-semibold">{areaName}</span>
           <span className="ml-auto text-xs text-[var(--color-text-faint)]">{t("chat")}</span>

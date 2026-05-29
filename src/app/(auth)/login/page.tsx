@@ -47,7 +47,7 @@ export default function LoginPage() {
 
   return (
     <main className="flex min-h-screen items-center justify-center px-6">
-      <div className="animate-slide-up w-full max-w-sm rounded-[var(--radius)] border border-[var(--color-border)] bg-[var(--color-surface)] p-8 text-center">
+      <div className="animate-slide-up glass w-full max-w-sm rounded-xl border border-white/[0.1] bg-white/[0.05] p-8 text-center shadow-[0_8px_48px_rgba(0,0,0,0.7)]">
         <h1 className="text-2xl font-semibold">{tApp("name")}</h1>
         <p className="mt-2 text-sm text-[var(--color-text-muted)]">
           {t("loginSubtitle")}

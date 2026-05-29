@@ -1,40 +1,40 @@
 @import "tailwindcss";
 
 /*
- * Tandem — tema light minimalista. Paleta blanco/negro sin morado.
+ * Tandem — tema dark profundo con glassmorphism. Negro/blanco, sin morado.
  */
 @theme {
-  /* Superficies */
-  --color-bg: #ffffff;
-  --color-surface: #f9fafb;
-  --color-surface-2: #f3f4f6;
-  --color-border: #e5e7eb;
-  --color-border-strong: #d1d5db;
+  /* Fondo */
+  --color-bg: #07070e;
+  --color-surface: rgba(255, 255, 255, 0.04);
+  --color-surface-2: rgba(255, 255, 255, 0.08);
+  --color-border: rgba(255, 255, 255, 0.07);
+  --color-border-strong: rgba(255, 255, 255, 0.13);
 
   /* Texto */
-  --color-text: #111827;
-  --color-text-muted: #6b7280;
-  --color-text-faint: #9ca3af;
+  --color-text: #f0f4ff;
+  --color-text-muted: rgba(240, 244, 255, 0.55);
+  --color-text-faint: rgba(240, 244, 255, 0.3);
 
-  /* Acento — negro */
-  --color-accent: #111827;
-  --color-accent-hover: #374151;
-  --color-accent-soft: #f3f4f6;
+  /* Acento — blanco puro */
+  --color-accent: #ffffff;
+  --color-accent-hover: rgba(255, 255, 255, 0.85);
+  --color-accent-soft: rgba(255, 255, 255, 0.07);
 
-  /* Prioridades */
-  --color-priority-alta: #dc2626;
-  --color-priority-media: #d97706;
-  --color-priority-baja: #9ca3af;
+  /* Prioridades — vibrantes para fondo oscuro */
+  --color-priority-alta: #ff5f5f;
+  --color-priority-media: #f59e0b;
+  --color-priority-baja: rgba(240, 244, 255, 0.28);
 
   /* Estados */
-  --color-success: #16a34a;
-  --color-danger: #dc2626;
+  --color-success: #34d399;
+  --color-danger: #ff5f5f;
 
   /* Tipografía */
   --font-sans: var(--font-general-sans), system-ui, sans-serif;
   --font-display: var(--font-clash-display), var(--font-general-sans), sans-serif;
 
-  /* Radios */
+  /* Radio */
   --radius: 0.5rem;
 }
 
@@ -43,11 +43,15 @@
 }
 
 html {
-  color-scheme: light;
+  color-scheme: dark;
 }
 
 body {
   background-color: var(--color-bg);
+  background-image:
+    radial-gradient(ellipse at 15% 65%, rgba(60, 40, 120, 0.12) 0%, transparent 55%),
+    radial-gradient(ellipse at 82% 18%, rgba(20, 40, 100, 0.1) 0%, transparent 50%);
+  background-attachment: fixed;
   color: var(--color-text);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
@@ -60,24 +64,34 @@ h1, h2, h3, h4 {
 }
 
 ::selection {
-  background-color: #e5e7eb;
+  background-color: rgba(255, 255, 255, 0.15);
 }
 
-/* Scrollbar discreta */
-::-webkit-scrollbar { width: 6px; height: 6px; }
+/* Scrollbar mínima */
+::-webkit-scrollbar { width: 4px; height: 4px; }
 ::-webkit-scrollbar-thumb {
-  background: var(--color-border-strong);
+  background: rgba(255, 255, 255, 0.12);
   border-radius: 9999px;
 }
 ::-webkit-scrollbar-track { background: transparent; }
 
-/* ===== Keyframes ===== */
+/* ========= Glassmorphism ========= */
+.glass {
+  backdrop-filter: blur(20px) saturate(1.8);
+  -webkit-backdrop-filter: blur(20px) saturate(1.8);
+}
+.glass-sm {
+  backdrop-filter: blur(10px) saturate(1.5);
+  -webkit-backdrop-filter: blur(10px) saturate(1.5);
+}
+
+/* ========= Keyframes ========= */
 @keyframes fade-in {
   from { opacity: 0; }
   to   { opacity: 1; }
 }
 @keyframes slide-up {
-  from { opacity: 0; transform: translateY(6px); }
+  from { opacity: 0; transform: translateY(8px); }
   to   { opacity: 1; transform: translateY(0);   }
 }
 @keyframes slide-in-right {
@@ -85,22 +99,26 @@ h1, h2, h3, h4 {
   to   { opacity: 1; transform: translateX(0);    }
 }
 @keyframes scale-in {
-  from { opacity: 0; transform: scale(0.96); }
+  from { opacity: 0; transform: scale(0.95); }
   to   { opacity: 1; transform: scale(1);    }
 }
 @keyframes shimmer {
   from { background-position: 200% 0; }
   to   { background-position: -200% 0; }
 }
+@keyframes glow-pulse {
+  0%, 100% { box-shadow: 0 0 12px rgba(255,255,255,0.06); }
+  50%       { box-shadow: 0 0 24px rgba(255,255,255,0.12); }
+}
 
-/* ===== Clases de animación ===== */
-.animate-fade-in     { animation: fade-in 0.12s ease-out both; }
-.animate-slide-up    { animation: slide-up 0.18s cubic-bezier(0.16,1,0.3,1) both; }
-.animate-slide-right { animation: slide-in-right 0.2s cubic-bezier(0.16,1,0.3,1) both; }
-.animate-scale-in    { animation: scale-in 0.12s cubic-bezier(0.16,1,0.3,1) both; }
+/* ========= Clases de animación ========= */
+.animate-fade-in     { animation: fade-in 0.15s ease-out both; }
+.animate-slide-up    { animation: slide-up 0.2s cubic-bezier(0.16,1,0.3,1) both; }
+.animate-slide-right { animation: slide-in-right 0.22s cubic-bezier(0.16,1,0.3,1) both; }
+.animate-scale-in    { animation: scale-in 0.15s cubic-bezier(0.16,1,0.3,1) both; }
 
-/* Stagger para listas — hasta 8 hijos */
-.stagger > * { animation: slide-up 0.18s cubic-bezier(0.16,1,0.3,1) both; }
+/* Stagger listas */
+.stagger > * { animation: slide-up 0.2s cubic-bezier(0.16,1,0.3,1) both; }
 .stagger > *:nth-child(1) { animation-delay: 0ms;   }
 .stagger > *:nth-child(2) { animation-delay: 30ms;  }
 .stagger > *:nth-child(3) { animation-delay: 55ms;  }
@@ -110,13 +128,21 @@ h1, h2, h3, h4 {
 .stagger > *:nth-child(7) { animation-delay: 125ms; }
 .stagger > *:nth-child(8) { animation-delay: 140ms; }
 
-/* Micro-interacción de pulsado */
+/* Micro-interacción pulsado */
 button:not([disabled]):active,
-[role="button"]:not([disabled]):active { transform: scale(0.97); transition: transform 0.06s ease; }
+[role="button"]:not([disabled]):active {
+  transform: scale(0.96);
+  transition: transform 0.06s ease;
+}
 
-/* Skeleton shimmer */
+/* Skeleton */
 .skeleton {
-  background: linear-gradient(90deg, var(--color-surface-2) 25%, var(--color-border) 50%, var(--color-surface-2) 75%);
+  background: linear-gradient(
+    90deg,
+    rgba(255,255,255,0.04) 25%,
+    rgba(255,255,255,0.08) 50%,
+    rgba(255,255,255,0.04) 75%
+  );
   background-size: 200% 100%;
   animation: shimmer 1.4s infinite ease-in-out;
   border-radius: var(--radius);
@@ -124,7 +150,7 @@ button:not([disabled]):active,
 
 /* Focus ring */
 :focus-visible {
-  outline: 2px solid var(--color-accent);
+  outline: 1.5px solid rgba(255, 255, 255, 0.5);
   outline-offset: 2px;
   border-radius: var(--radius);
 }

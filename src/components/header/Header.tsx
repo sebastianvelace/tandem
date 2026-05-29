@@ -8,10 +8,6 @@ import { logoutAction, setLocaleAction } from "@/server/actions/session";
 import { NotificationBell } from "@/components/notifications/NotificationBell";
 import type { User } from "@/db/schema";
 
-/*
- * Header (§6.6): campana de notificaciones (placeholder S5), avatar y
- * conmutador de idioma + logout. Desktop-first.
- */
 export function Header({ user, title }: { user: User; title?: string }) {
   const t = useTranslations();
   const locale = useLocale();
@@ -29,18 +25,20 @@ export function Header({ user, title }: { user: User; title?: string }) {
   const initials = (user.name ?? user.email).slice(0, 2).toUpperCase();
 
   return (
-    <header className="flex h-14 shrink-0 items-center justify-between border-b border-[var(--color-border)] px-5">
-      <h1 className="text-base font-semibold">{title ?? t("app.name")}</h1>
+    <header className="glass flex h-14 shrink-0 items-center justify-between border-b border-white/[0.06] bg-black/40 px-5">
+      <h1 className="text-sm font-semibold tracking-tight text-[var(--color-text)]">
+        {title ?? t("app.name")}
+      </h1>
 
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-1">
         <button
           onClick={toggleLocale}
           disabled={pending}
           aria-label={t("settings.language")}
           title={`${t("settings.language")}: ${locale.toUpperCase()}`}
-          className="flex h-9 items-center gap-1.5 rounded-md px-2 text-sm text-[var(--color-text-muted)] transition-colors hover:bg-[var(--color-surface-2)] hover:text-[var(--color-text)]"
+          className="flex h-8 items-center gap-1.5 rounded-md px-2 text-xs text-[var(--color-text-muted)] transition-colors hover:bg-white/[0.07] hover:text-[var(--color-text)]"
         >
-          <Languages size={16} />
+          <Languages size={14} />
           <span className="uppercase">{locale}</span>
         </button>
 
@@ -51,10 +49,10 @@ export function Header({ user, title }: { user: User; title?: string }) {
           <img
             src={user.avatarUrl}
             alt={user.name ?? user.email}
-            className="h-8 w-8 rounded-full border border-[var(--color-border)]"
+            className="h-8 w-8 rounded-full border border-white/20 object-cover"
           />
         ) : (
-          <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[var(--color-accent-soft)] text-xs font-medium">
+          <span className="flex h-8 w-8 items-center justify-center rounded-full border border-white/20 bg-gradient-to-br from-white/20 to-white/5 text-xs font-semibold text-white shadow-[0_0_12px_rgba(255,255,255,0.08)]">
             {initials}
           </span>
         )}
@@ -64,9 +62,9 @@ export function Header({ user, title }: { user: User; title?: string }) {
           disabled={pending}
           aria-label={t("auth.logout")}
           title={t("auth.logout")}
-          className="flex h-9 w-9 items-center justify-center rounded-md text-[var(--color-text-muted)] transition-colors hover:bg-[var(--color-surface-2)] hover:text-[var(--color-text)]"
+          className="flex h-8 w-8 items-center justify-center rounded-md text-[var(--color-text-muted)] transition-colors hover:bg-white/[0.07] hover:text-[var(--color-text)]"
         >
-          <LogOut size={16} />
+          <LogOut size={15} />
         </button>
       </div>
     </header>

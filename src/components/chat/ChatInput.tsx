@@ -38,7 +38,7 @@ export function ChatInput({
   }
 
   return (
-    <div className="flex items-end gap-2 border-t border-[var(--color-border)] bg-[var(--color-surface)] p-3">
+    <div className="glass-sm flex items-end gap-2 border-t border-white/[0.06] bg-black/30 p-3">
       <textarea
         ref={ref}
         value={value}

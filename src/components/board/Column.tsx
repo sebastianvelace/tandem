@@ -14,9 +14,9 @@ import type { ClientLite, MemberLite } from "@/lib/chat/types";
 import { Card } from "./Card";
 
 const STATUS_COLOR: Record<TaskStatus, string> = {
-  por_hacer: "#6b7280",
-  en_proceso: "#d97706",
-  completada: "#16a34a",
+  por_hacer: "rgba(240,244,255,0.35)",
+  en_proceso: "#f59e0b",
+  completada: "#34d399",
 };
 
 export function Column({
