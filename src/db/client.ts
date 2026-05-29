@@ -25,13 +25,19 @@ function getDb(): DB {
   if (globalForDb.drizzleDb) return globalForDb.drizzleDb;
 
   const pgClient =
-    globalForDb.pgClient ?? postgres(env.databaseUrl, { prepare: false });
+    globalForDb.pgClient ??
+    postgres(env.databaseUrl, {
+      prepare: false,
+      max: 1,           // PgBouncer transaction mode: 1 conexión por instancia serverless
+      idle_timeout: 20,
+      connect_timeout: 10,
+    });
   const instance = drizzle(pgClient, { schema });
 
-  if (process.env.NODE_ENV !== "production") {
-    globalForDb.pgClient = pgClient;
-    globalForDb.drizzleDb = instance;
-  }
+  // Cachear siempre — reutiliza la conexión en invocaciones warm de la misma instancia
+  globalForDb.pgClient = pgClient;
+  globalForDb.drizzleDb = instance;
+
   return instance;
 }
 
