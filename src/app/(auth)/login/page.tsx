@@ -24,6 +24,7 @@ export default function LoginPage() {
   const params = useSearchParams();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
+  const unauthorized = params.get("error") === "unauthorized";
 
   async function signIn() {
     setLoading(true);
@@ -46,7 +47,7 @@ export default function LoginPage() {
 
   return (
     <main className="flex min-h-screen items-center justify-center px-6">
-      <div className="w-full max-w-sm rounded-[var(--radius)] border border-[var(--color-border)] bg-[var(--color-surface)] p-8 text-center">
+      <div className="animate-slide-up w-full max-w-sm rounded-[var(--radius)] border border-[var(--color-border)] bg-[var(--color-surface)] p-8 text-center">
         <h1 className="text-2xl font-semibold">{tApp("name")}</h1>
         <p className="mt-2 text-sm text-[var(--color-text-muted)]">
           {t("loginSubtitle")}
@@ -61,7 +62,12 @@ export default function LoginPage() {
           {loading ? t("signingIn") : t("continueWithGoogle")}
         </Button>
 
-        {error && (
+        {unauthorized && (
+          <p className="mt-4 text-sm text-[var(--color-danger)]">
+            Acceso no autorizado. Contacta al administrador.
+          </p>
+        )}
+        {error && !unauthorized && (
           <p className="mt-4 text-sm text-[var(--color-danger)]">
             {t("errorGeneric")}
           </p>

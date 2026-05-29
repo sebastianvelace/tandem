@@ -18,7 +18,7 @@ export default async function AppLayout({
       <Sidebar areas={ctx.areas} workspaceName={ctx.workspaceName} />
       <div className="flex min-w-0 flex-1 flex-col">
         <Header user={ctx.user} />
-        <main className="min-h-0 flex-1 overflow-auto">{children}</main>
+        <main className="animate-fade-in min-h-0 flex-1 overflow-auto">{children}</main>
       </div>
     </div>
   );

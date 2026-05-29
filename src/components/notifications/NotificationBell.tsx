@@ -52,7 +52,7 @@ export function NotificationBell({ userId }: { userId: string }) {
       </button>
 
       {open && (
-        <div className="absolute right-0 top-11 z-50 w-80 overflow-hidden rounded-[var(--radius)] border border-[var(--color-border)] bg-[var(--color-surface)] shadow-xl">
+        <div className="animate-scale-in absolute right-0 top-11 z-50 w-80 overflow-hidden rounded-[var(--radius)] border border-[var(--color-border)] bg-[var(--color-surface)] shadow-xl">
           <div className="flex items-center justify-between border-b border-[var(--color-border)] px-4 py-2.5">
             <span className="text-sm font-semibold">{t("title")}</span>
             {unread > 0 && (
@@ -61,7 +61,7 @@ export function NotificationBell({ userId }: { userId: string }) {
               </button>
             )}
           </div>
-          <ul className="max-h-96 overflow-y-auto">
+          <ul className="stagger max-h-96 overflow-y-auto">
             {items.length === 0 ? (
               <li className="px-4 py-8 text-center text-sm text-[var(--color-text-faint)]">
                 {t("empty")}

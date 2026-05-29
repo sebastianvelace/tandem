@@ -27,6 +27,16 @@ export async function GET(request: NextRequest) {
   const user = data.user;
   const meta = user.user_metadata ?? {};
 
+  // Allowlist: si ALLOWED_EMAILS está definido solo esos emails pueden entrar.
+  const allowedRaw = process.env.ALLOWED_EMAILS ?? "";
+  if (allowedRaw.trim()) {
+    const allowed = allowedRaw.split(",").map((e) => e.trim().toLowerCase()).filter(Boolean);
+    if (!allowed.includes((user.email ?? "").toLowerCase())) {
+      await supabase.auth.signOut();
+      return NextResponse.redirect(`${origin}/login?error=unauthorized`);
+    }
+  }
+
   const { workspaceId } = await bootstrapUserAndWorkspace({
     id: user.id,
     email: user.email ?? meta.email ?? "",
