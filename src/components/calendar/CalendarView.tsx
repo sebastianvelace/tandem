@@ -218,14 +218,14 @@ export function CalendarView({
       )}
 
       {/* Días de la semana */}
-      <div className="grid grid-cols-7 border-b border-[var(--color-border)] pb-1 text-xs text-[var(--color-text-faint)]">
+      <div className="grid grid-cols-7 border-b border-white/[0.1] pb-1.5 text-xs text-[var(--color-text-faint)]">
         {weekdays.map((w) => (
-          <div key={w} className="px-2 capitalize">{w}</div>
+          <div key={w} className="px-2 capitalize tracking-wide">{w}</div>
         ))}
       </div>
 
       {/* Rejilla */}
-      <div className="grid min-h-0 flex-1 grid-cols-7 grid-rows-6 gap-px overflow-hidden rounded-b-[var(--radius)] bg-[var(--color-border)]">
+      <div className="grid min-h-0 flex-1 grid-cols-7 grid-rows-6 gap-px overflow-hidden rounded-b-[var(--radius)] bg-white/[0.08]">
         {days.map((d) => {
           const inMonth = d.getMonth() === cursor.getMonth();
           const isToday = dayKey(d) === dayKey(now);
@@ -234,8 +234,8 @@ export function CalendarView({
             <div
               key={d.toISOString()}
               className={cn(
-                "group flex min-h-0 flex-col gap-0.5 overflow-y-auto bg-[var(--color-bg)] p-1",
-                !inMonth && "opacity-40",
+                "group flex min-h-0 flex-col gap-0.5 overflow-y-auto bg-[#07070e] p-1.5 transition-colors hover:bg-white/[0.04]",
+                !inMonth && "opacity-30",
               )}
             >
               <div className="flex items-center justify-between">
