@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { Calendar, Archive, Users, Hash, Plus } from "lucide-react";
+import { Calendar, Archive, Users, Hash, Plus, Settings } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { Area } from "@/db/schema";
 import { CreateAreaButton } from "./CreateAreaButton";
@@ -66,6 +66,9 @@ export function Sidebar({
           </SecondaryLink>
           <SecondaryLink href="/archive" active={pathname.startsWith("/archive")} icon={<Archive size={14} />}>
             {t("archive")}
+          </SecondaryLink>
+          <SecondaryLink href="/settings/workspace" active={pathname.startsWith("/settings")} icon={<Settings size={14} />}>
+            {t("settings")}
           </SecondaryLink>
         </ul>
       </nav>
