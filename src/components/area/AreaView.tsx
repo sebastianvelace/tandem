@@ -1,18 +1,15 @@
 "use client";
 
-import { useState } from "react";
 import { useTranslations } from "next-intl";
-import { MessagesSquare, SquareKanban } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { Hash } from "lucide-react";
 import type { ClientLite, MemberLite, RootMessageDTO } from "@/lib/chat/types";
 import type { TaskDTO } from "@/lib/board/types";
 import { ChatPanel } from "@/components/chat/ChatPanel";
 import { BoardClient } from "@/components/board/BoardClient";
 
 /*
- * Vista de área (§6.6): pestañas Chat / Tablero. Ambos paneles se montan a la
- * vez (se oculta el inactivo) para conservar sus suscripciones Realtime y el
- * estado al alternar.
+ * Vista de área: Chat (izquierda, siempre visible) + Tablero (derecha, flex-1).
+ * Ambos paneles se montan a la vez para conservar sus suscripciones Realtime.
  */
 export function AreaView({
   areaId,
@@ -32,31 +29,30 @@ export function AreaView({
   initialTasks: TaskDTO[];
 }) {
   const t = useTranslations("area");
-  const [tab, setTab] = useState<"chat" | "board">("chat");
 
   return (
-    <div className="flex h-full flex-col">
-      <div className="flex h-12 shrink-0 items-center gap-1 border-b border-[var(--color-border)] px-4">
-        <span className="mr-3 text-sm font-medium">{areaName}</span>
-        <Tab active={tab === "chat"} onClick={() => setTab("chat")}>
-          <MessagesSquare size={14} /> {t("chat")}
-        </Tab>
-        <Tab active={tab === "board"} onClick={() => setTab("board")}>
-          <SquareKanban size={14} /> {t("board")}
-        </Tab>
+    <div className="flex h-full min-w-0">
+      {/* Panel de chat — columna izquierda fija */}
+      <div className="flex w-80 shrink-0 flex-col border-r border-[var(--color-border)]">
+        <div className="flex h-11 shrink-0 items-center gap-2 border-b border-[var(--color-border)] px-4">
+          <Hash size={14} className="text-[var(--color-text-faint)]" />
+          <span className="truncate text-sm font-semibold">{areaName}</span>
+          <span className="ml-auto text-xs text-[var(--color-text-faint)]">{t("chat")}</span>
+        </div>
+        <div className="min-h-0 flex-1 flex flex-col">
+          <ChatPanel
+            areaId={areaId}
+            areaName={areaName}
+            currentUserId={currentUserId}
+            members={members}
+            clients={clients}
+            initialMessages={initialMessages}
+          />
+        </div>
       </div>
 
-      <div className={cn("min-h-0 flex-1", tab === "chat" ? "flex" : "hidden")}>
-        <ChatPanel
-          areaId={areaId}
-          areaName={areaName}
-          currentUserId={currentUserId}
-          members={members}
-          clients={clients}
-          initialMessages={initialMessages}
-        />
-      </div>
-      <div className={cn("min-h-0 flex-1", tab === "board" ? "flex" : "hidden")}>
+      {/* Panel de tablero — columna derecha */}
+      <div className="flex min-w-0 flex-1 flex-col">
         <BoardClient
           areaId={areaId}
           members={members}
@@ -65,29 +61,5 @@ export function AreaView({
         />
       </div>
     </div>
-  );
-}
-
-function Tab({
-  active,
-  onClick,
-  children,
-}: {
-  active: boolean;
-  onClick: () => void;
-  children: React.ReactNode;
-}) {
-  return (
-    <button
-      onClick={onClick}
-      className={cn(
-        "flex items-center gap-1.5 rounded-md px-3 py-1 text-sm transition-colors",
-        active
-          ? "bg-[var(--color-accent-soft)] text-[var(--color-text)]"
-          : "text-[var(--color-text-muted)] hover:text-[var(--color-text)]",
-      )}
-    >
-      {children}
-    </button>
   );
 }

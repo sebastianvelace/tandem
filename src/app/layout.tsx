@@ -37,7 +37,7 @@ export default async function RootLayout({
   const messages = await getMessages();
 
   return (
-    <html lang={locale} className={`${body.variable} ${display.variable} dark`}>
+    <html lang={locale} className={`${body.variable} ${display.variable}`}>
       <body>
         <NextIntlClientProvider locale={locale} messages={messages}>
           {children}

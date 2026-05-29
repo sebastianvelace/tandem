@@ -24,11 +24,10 @@ import { PriorityDot } from "./PriorityChip";
 const TASK_STATUSES: TaskStatus[] = ["por_hacer", "en_proceso", "completada"];
 const SWIPE_THRESHOLD = 72;
 
-/* Colores que coinciden con las CSS vars del tema */
 const STATUS_COLOR: Record<TaskStatus, string> = {
-  por_hacer: "#8b7bf7",
-  en_proceso: "#e0b15a",
-  completada: "#5fb88a",
+  por_hacer: "#6b7280",
+  en_proceso: "#d97706",
+  completada: "#16a34a",
 };
 
 export function Card({
@@ -137,7 +136,7 @@ export function Card({
         "group relative overflow-hidden rounded-[var(--radius)] border border-[var(--color-border)] bg-[var(--color-surface-2)] shadow-sm",
         "transition-[border-color,box-shadow] duration-150",
         "hover:border-[var(--color-border-strong)] hover:shadow-md",
-        isDragging && "shadow-xl ring-1 ring-[var(--color-accent)]",
+        isDragging && "shadow-xl ring-1 ring-[var(--color-border-strong)]",
         task.status === "completada" && "opacity-75",
       )}
     >

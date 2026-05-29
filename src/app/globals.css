@@ -1,43 +1,41 @@
 @import "tailwindcss";
 
 /*
- * Tandem — tema dark ÚNICO (UX-01, ARQ-10).
- * Paleta: grises oscuros + 1 acento violeta suave.
- * Prioridades: alta=coral sutil, media=ámbar, baja=gris (UX-05).
+ * Tandem — tema light minimalista. Paleta blanco/negro sin morado.
  */
 @theme {
   /* Superficies */
-  --color-bg: #0d0e12;
-  --color-surface: #15171d;
-  --color-surface-2: #1c1f27;
-  --color-border: #262a34;
-  --color-border-strong: #333845;
+  --color-bg: #ffffff;
+  --color-surface: #f9fafb;
+  --color-surface-2: #f3f4f6;
+  --color-border: #e5e7eb;
+  --color-border-strong: #d1d5db;
 
   /* Texto */
-  --color-text: #e6e8ee;
-  --color-text-muted: #9aa0ad;
-  --color-text-faint: #6b7280;
+  --color-text: #111827;
+  --color-text-muted: #6b7280;
+  --color-text-faint: #9ca3af;
 
-  /* Acento */
-  --color-accent: #8b7bf7;
-  --color-accent-hover: #a094f9;
-  --color-accent-soft: #2a2546;
+  /* Acento — negro */
+  --color-accent: #111827;
+  --color-accent-hover: #374151;
+  --color-accent-soft: #f3f4f6;
 
   /* Prioridades */
-  --color-priority-alta: #f0857d;
-  --color-priority-media: #e0b15a;
-  --color-priority-baja: #6b7280;
+  --color-priority-alta: #dc2626;
+  --color-priority-media: #d97706;
+  --color-priority-baja: #9ca3af;
 
   /* Estados */
-  --color-success: #5fb88a;
-  --color-danger: #f0857d;
+  --color-success: #16a34a;
+  --color-danger: #dc2626;
 
-  /* Tipografía (S1-T01: General Sans cuerpo, Clash Display títulos) */
+  /* Tipografía */
   --font-sans: var(--font-general-sans), system-ui, sans-serif;
   --font-display: var(--font-clash-display), var(--font-general-sans), sans-serif;
 
   /* Radios */
-  --radius: 0.625rem;
+  --radius: 0.5rem;
 }
 
 * {
@@ -45,7 +43,7 @@
 }
 
 html {
-  color-scheme: dark;
+  color-scheme: light;
 }
 
 body {
@@ -58,19 +56,18 @@ body {
 
 h1, h2, h3, h4 {
   font-family: var(--font-display);
-  letter-spacing: -0.01em;
+  letter-spacing: -0.02em;
 }
 
 ::selection {
-  background-color: var(--color-accent-soft);
+  background-color: #e5e7eb;
 }
 
-/* Scrollbar discreta acorde al dark */
-::-webkit-scrollbar { width: 8px; height: 8px; }
+/* Scrollbar discreta */
+::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-thumb {
   background: var(--color-border-strong);
   border-radius: 9999px;
-  border: 2px solid var(--color-bg);
 }
 ::-webkit-scrollbar-track { background: transparent; }
 
@@ -80,15 +77,15 @@ h1, h2, h3, h4 {
   to   { opacity: 1; }
 }
 @keyframes slide-up {
-  from { opacity: 0; transform: translateY(8px); }
+  from { opacity: 0; transform: translateY(6px); }
   to   { opacity: 1; transform: translateY(0);   }
 }
 @keyframes slide-in-right {
-  from { opacity: 0; transform: translateX(20px); }
+  from { opacity: 0; transform: translateX(16px); }
   to   { opacity: 1; transform: translateX(0);    }
 }
 @keyframes scale-in {
-  from { opacity: 0; transform: scale(0.95); }
+  from { opacity: 0; transform: scale(0.96); }
   to   { opacity: 1; transform: scale(1);    }
 }
 @keyframes shimmer {
@@ -97,25 +94,25 @@ h1, h2, h3, h4 {
 }
 
 /* ===== Clases de animación ===== */
-.animate-fade-in     { animation: fade-in 0.15s ease-out both; }
-.animate-slide-up    { animation: slide-up 0.2s cubic-bezier(0.16,1,0.3,1) both; }
-.animate-slide-right { animation: slide-in-right 0.25s cubic-bezier(0.16,1,0.3,1) both; }
-.animate-scale-in    { animation: scale-in 0.15s cubic-bezier(0.16,1,0.3,1) both; }
+.animate-fade-in     { animation: fade-in 0.12s ease-out both; }
+.animate-slide-up    { animation: slide-up 0.18s cubic-bezier(0.16,1,0.3,1) both; }
+.animate-slide-right { animation: slide-in-right 0.2s cubic-bezier(0.16,1,0.3,1) both; }
+.animate-scale-in    { animation: scale-in 0.12s cubic-bezier(0.16,1,0.3,1) both; }
 
 /* Stagger para listas — hasta 8 hijos */
-.stagger > * { animation: slide-up 0.2s cubic-bezier(0.16,1,0.3,1) both; }
+.stagger > * { animation: slide-up 0.18s cubic-bezier(0.16,1,0.3,1) both; }
 .stagger > *:nth-child(1) { animation-delay: 0ms;   }
-.stagger > *:nth-child(2) { animation-delay: 35ms;  }
-.stagger > *:nth-child(3) { animation-delay: 65ms;  }
-.stagger > *:nth-child(4) { animation-delay: 90ms;  }
-.stagger > *:nth-child(5) { animation-delay: 115ms; }
-.stagger > *:nth-child(6) { animation-delay: 135ms; }
-.stagger > *:nth-child(7) { animation-delay: 155ms; }
-.stagger > *:nth-child(8) { animation-delay: 175ms; }
+.stagger > *:nth-child(2) { animation-delay: 30ms;  }
+.stagger > *:nth-child(3) { animation-delay: 55ms;  }
+.stagger > *:nth-child(4) { animation-delay: 75ms;  }
+.stagger > *:nth-child(5) { animation-delay: 95ms;  }
+.stagger > *:nth-child(6) { animation-delay: 110ms; }
+.stagger > *:nth-child(7) { animation-delay: 125ms; }
+.stagger > *:nth-child(8) { animation-delay: 140ms; }
 
-/* Micro-interacción de pulsado en botones e interactivos */
+/* Micro-interacción de pulsado */
 button:not([disabled]):active,
-[role="button"]:not([disabled]):active { transform: scale(0.97); transition: transform 0.07s ease; }
+[role="button"]:not([disabled]):active { transform: scale(0.97); transition: transform 0.06s ease; }
 
 /* Skeleton shimmer */
 .skeleton {
@@ -125,7 +122,7 @@ button:not([disabled]):active,
   border-radius: var(--radius);
 }
 
-/* Focus ring global unificado */
+/* Focus ring */
 :focus-visible {
   outline: 2px solid var(--color-accent);
   outline-offset: 2px;

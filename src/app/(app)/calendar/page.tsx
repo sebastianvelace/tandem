@@ -1,17 +1,13 @@
-import { resolveActiveWorkspace } from "@/server/auth/authz";
+import { getAppContext } from "@/server/services/context";
 import { listScheduledTasks } from "@/server/services/tasks";
 import {
   CalendarView,
   type CalendarTask,
 } from "@/components/calendar/CalendarView";
 
-/*
- * /calendar: vista calendario interna del workspace (CAL-01..04). Tareas con
- * fecha límite de todas las áreas. Solo lectura; el sync con Google es aparte.
- */
 export default async function CalendarPage() {
-  const { workspaceId } = await resolveActiveWorkspace();
-  const rows = await listScheduledTasks(workspaceId);
+  const ctx = await getAppContext();
+  const rows = await listScheduledTasks(ctx.workspaceId);
   const tasks: CalendarTask[] = rows
     .filter((r) => r.dueDate !== null)
     .map((r) => ({
@@ -22,5 +18,5 @@ export default async function CalendarPage() {
       areaId: r.areaId,
       dueDate: r.dueDate!.toISOString(),
     }));
-  return <CalendarView tasks={tasks} />;
+  return <CalendarView tasks={tasks} areas={ctx.areas} />;
 }

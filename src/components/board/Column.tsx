@@ -14,9 +14,9 @@ import type { ClientLite, MemberLite } from "@/lib/chat/types";
 import { Card } from "./Card";
 
 const STATUS_COLOR: Record<TaskStatus, string> = {
-  por_hacer: "#8b7bf7",
-  en_proceso: "#e0b15a",
-  completada: "#5fb88a",
+  por_hacer: "#6b7280",
+  en_proceso: "#d97706",
+  completada: "#16a34a",
 };
 
 export function Column({
@@ -61,8 +61,8 @@ export function Column({
 
   return (
     <div className="flex min-h-0 w-72 shrink-0 flex-col">
-      {/* Cabecera de columna */}
-      <div className="mb-3 flex items-center gap-2 px-1">
+      {/* Cabecera */}
+      <div className="mb-2 flex items-center gap-2 px-1">
         <span
           className="h-2 w-2 shrink-0 rounded-full"
           style={{ backgroundColor: accentColor }}
@@ -79,7 +79,38 @@ export function Column({
         >
           {tasks.length}
         </span>
+        {/* Botón de añadir tarea — en el encabezado, siempre visible */}
+        <button
+          onClick={() => setAdding(true)}
+          title={tb("addTask")}
+          className="flex h-5 w-5 items-center justify-center rounded text-[var(--color-text-faint)] hover:bg-[var(--color-surface-2)] hover:text-[var(--color-text)]"
+        >
+          <Plus size={13} />
+        </button>
       </div>
+
+      {/* Formulario de añadir (aparece arriba de las tarjetas) */}
+      {adding && (
+        <textarea
+          autoFocus
+          rows={2}
+          value={value}
+          onChange={(e) => setValue(e.target.value)}
+          onBlur={submit}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" && !e.shiftKey) {
+              e.preventDefault();
+              submit();
+            }
+            if (e.key === "Escape") {
+              setValue("");
+              setAdding(false);
+            }
+          }}
+          placeholder={tb("quickAddPlaceholder")}
+          className="mb-2 resize-none rounded-[var(--radius)] border border-[var(--color-border-strong)] bg-[var(--color-surface)] p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)]"
+        />
+      )}
 
       {/* Zona droppable */}
       <div
@@ -108,46 +139,9 @@ export function Column({
 
         {tasks.length === 0 && !adding && (
           <div className="flex flex-1 flex-col items-center justify-center gap-1 py-8 text-center">
-            <span
-              className="text-2xl opacity-20"
-              style={{ color: accentColor }}
-            >
-              ○
-            </span>
-            <span className="text-xs text-[var(--color-text-faint)]">
-              {tb("emptyBoard")}
-            </span>
+            <span className="text-2xl opacity-20" style={{ color: accentColor }}>○</span>
+            <span className="text-xs text-[var(--color-text-faint)]">{tb("emptyBoard")}</span>
           </div>
-        )}
-
-        {adding ? (
-          <textarea
-            autoFocus
-            rows={2}
-            value={value}
-            onChange={(e) => setValue(e.target.value)}
-            onBlur={submit}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" && !e.shiftKey) {
-                e.preventDefault();
-                submit();
-              }
-              if (e.key === "Escape") {
-                setValue("");
-                setAdding(false);
-              }
-            }}
-            placeholder={tb("quickAddPlaceholder")}
-            className="resize-none rounded-[var(--radius)] border border-[var(--color-border-strong)] bg-[var(--color-surface-2)] p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)]"
-          />
-        ) : (
-          <button
-            onClick={() => setAdding(true)}
-            className="flex items-center gap-1.5 rounded-[var(--radius)] px-2 py-2 text-xs text-[var(--color-text-faint)] transition-colors hover:bg-[var(--color-surface)] hover:text-[var(--color-text-muted)]"
-          >
-            <Plus size={13} />
-            {tb("addTask")}
-          </button>
         )}
       </div>
     </div>
