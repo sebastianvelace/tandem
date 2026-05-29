@@ -1,0 +1,82 @@
+{
+  "app": {
+    "name": "Tandem",
+    "tagline": "Your startup's control center"
+  },
+  "common": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "create": "Create",
+    "confirm": "Confirm",
+    "loading": "Loading…",
+    "search": "Search",
+    "close": "Close",
+    "all": "All"
+  },
+  "auth": {
+    "continueWithGoogle": "Continue with Google",
+    "loginTitle": "Sign in to Tandem",
+    "loginSubtitle": "Your startup's control center",
+    "logout": "Log out",
+    "signingIn": "Signing in…",
+    "errorGeneric": "Could not sign in. Please try again."
+  },
+  "sidebar": {
+    "areas": "Areas",
+    "clients": "Clients",
+    "calendar": "Calendar",
+    "archive": "Archive",
+    "settings": "Settings",
+    "newArea": "New area"
+  },
+  "areas": {
+    "create": "Create area",
+    "name": "Area name",
+    "namePlaceholder": "e.g. Design",
+    "color": "Color",
+    "icon": "Icon",
+    "rename": "Rename",
+    "deleteTitle": "Delete area",
+    "deleteConfirm": "What should happen to this area's tasks?",
+    "moveToGeneral": "Move to General",
+    "deleteTasks": "Delete the tasks",
+    "errorDuplicate": "An area with that name already exists",
+    "defaults": {
+      "general": "General",
+      "marketing": "Marketing",
+      "desarrollo": "Development",
+      "servicio_cliente": "Customer Service"
+    }
+  },
+  "task": {
+    "status": {
+      "por_hacer": "To do",
+      "en_proceso": "In progress",
+      "completada": "Done"
+    },
+    "priority": {
+      "alta": "High",
+      "media": "Medium",
+      "baja": "Low"
+    }
+  },
+  "settings": {
+    "title": "Settings",
+    "profile": "Profile",
+    "language": "Language",
+    "spanish": "Español",
+    "english": "English",
+    "workspace": "Workspace",
+    "members": "Members",
+    "inviteMember": "Invite member",
+    "inviteEmail": "Invitee email",
+    "googleCalendar": "Google Calendar",
+    "connectCalendar": "Connect Google Calendar"
+  },
+  "emptyStates": {
+    "noAreas": "No areas yet. Create the first one.",
+    "selectArea": "Select an area to get started"
+  }
+}

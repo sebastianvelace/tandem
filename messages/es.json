@@ -1,0 +1,82 @@
+{
+  "app": {
+    "name": "Tandem",
+    "tagline": "El centro de control de vuestra startup"
+  },
+  "common": {
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "delete": "Eliminar",
+    "edit": "Editar",
+    "create": "Crear",
+    "confirm": "Confirmar",
+    "loading": "Cargando…",
+    "search": "Buscar",
+    "close": "Cerrar",
+    "all": "Todos"
+  },
+  "auth": {
+    "continueWithGoogle": "Continuar con Google",
+    "loginTitle": "Entra en Tandem",
+    "loginSubtitle": "El centro de control de vuestra startup",
+    "logout": "Cerrar sesión",
+    "signingIn": "Iniciando sesión…",
+    "errorGeneric": "No se pudo iniciar sesión. Inténtalo de nuevo."
+  },
+  "sidebar": {
+    "areas": "Áreas",
+    "clients": "Clientes",
+    "calendar": "Calendario",
+    "archive": "Archivo",
+    "settings": "Configuración",
+    "newArea": "Crear área"
+  },
+  "areas": {
+    "create": "Crear área",
+    "name": "Nombre del área",
+    "namePlaceholder": "Ej. Diseño",
+    "color": "Color",
+    "icon": "Icono",
+    "rename": "Renombrar",
+    "deleteTitle": "Eliminar área",
+    "deleteConfirm": "¿Qué hacer con las tareas de esta área?",
+    "moveToGeneral": "Mover a General",
+    "deleteTasks": "Eliminar las tareas",
+    "errorDuplicate": "Ya existe un área con ese nombre",
+    "defaults": {
+      "general": "General",
+      "marketing": "Marketing",
+      "desarrollo": "Desarrollo",
+      "servicio_cliente": "Servicio al cliente"
+    }
+  },
+  "task": {
+    "status": {
+      "por_hacer": "Por hacer",
+      "en_proceso": "En proceso",
+      "completada": "Completada"
+    },
+    "priority": {
+      "alta": "Alta",
+      "media": "Media",
+      "baja": "Baja"
+    }
+  },
+  "settings": {
+    "title": "Configuración",
+    "profile": "Perfil",
+    "language": "Idioma",
+    "spanish": "Español",
+    "english": "English",
+    "workspace": "Workspace",
+    "members": "Miembros",
+    "inviteMember": "Invitar miembro",
+    "inviteEmail": "Email del invitado",
+    "googleCalendar": "Google Calendar",
+    "connectCalendar": "Conectar Google Calendar"
+  },
+  "emptyStates": {
+    "noAreas": "Aún no hay áreas. Crea la primera.",
+    "selectArea": "Selecciona un área para empezar"
+  }
+}
