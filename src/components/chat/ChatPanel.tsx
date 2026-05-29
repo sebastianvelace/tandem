@@ -90,10 +90,6 @@ export function ChatPanel({
   return (
     <div className="flex h-full min-w-0 flex-1">
       <div className="flex h-full min-w-0 flex-1 flex-col">
-        <div className="flex h-12 shrink-0 items-center gap-2 border-b border-[var(--color-border)] px-5">
-          <span className="text-sm font-medium">{areaName}</span>
-        </div>
-
         <div ref={scrollRef} className="min-h-0 flex-1 overflow-y-auto py-3">
           {messages.length === 0 ? (
             <div className="flex h-full items-center justify-center text-sm text-[var(--color-text-faint)]">

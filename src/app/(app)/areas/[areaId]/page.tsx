@@ -1,13 +1,14 @@
 import { notFound } from "next/navigation";
 import { getAppContext } from "@/server/services/context";
 import { listAreaMessages } from "@/server/services/messages";
+import { listAreaTasks } from "@/server/services/tasks";
 import { listActiveClients, listWorkspaceMembers } from "@/server/services/members";
-import { ChatPanel } from "@/components/chat/ChatPanel";
+import { AreaView } from "@/components/area/AreaView";
 
 /*
- * Detalle de área = chat (Sprint 2) + tablero (Sprint 3, pendiente).
- * Server Component: resuelve contexto y carga datos iniciales del chat
- * verificando que el área pertenece al workspace del usuario (anti-IDOR).
+ * Detalle de área = Chat (Sprint 2) + Tablero (Sprint 3) en pestañas.
+ * Server Component: resuelve contexto y carga los datos iniciales de ambos
+ * paneles verificando que el área pertenece al workspace (anti-IDOR).
  */
 export default async function AreaPage({
   params,
@@ -19,20 +20,22 @@ export default async function AreaPage({
   const area = ctx.areas.find((a) => a.id === areaId);
   if (!area) notFound();
 
-  const [initialMessages, members, clients] = await Promise.all([
+  const [initialMessages, initialTasks, members, clients] = await Promise.all([
     listAreaMessages(ctx.workspaceId, areaId),
+    listAreaTasks(ctx.workspaceId, areaId),
     listWorkspaceMembers(ctx.workspaceId),
     listActiveClients(ctx.workspaceId),
   ]);
 
   return (
-    <ChatPanel
+    <AreaView
       areaId={areaId}
       areaName={area.name}
       currentUserId={ctx.user.id}
       members={members}
       clients={clients}
       initialMessages={initialMessages}
+      initialTasks={initialTasks}
     />
   );
 }
