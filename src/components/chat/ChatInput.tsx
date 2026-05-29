@@ -65,7 +65,7 @@ export function ChatInput({
         className={cn(
           "flex h-9 w-9 shrink-0 items-center justify-center rounded-[var(--radius)] transition-colors",
           value.trim()
-            ? "bg-[var(--color-accent)] text-white hover:bg-[var(--color-accent-hover)]"
+            ? "bg-[var(--color-accent)] text-[var(--color-bg)] hover:bg-[var(--color-accent-hover)]"
             : "bg-[var(--color-surface-2)] text-[var(--color-text-faint)]",
         )}
       >

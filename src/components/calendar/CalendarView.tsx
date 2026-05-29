@@ -204,7 +204,7 @@ export function CalendarView({
           <button
             onClick={() => void saveEvent()}
             disabled={saving || !newEvent.title.trim()}
-            className="rounded bg-[var(--color-accent)] px-3 py-1 text-xs font-medium text-white disabled:opacity-40"
+            className="rounded bg-[var(--color-accent)] px-3 py-1 text-xs font-medium text-[var(--color-bg)] disabled:opacity-40"
           >
             {saving ? "…" : "Guardar"}
           </button>
@@ -242,7 +242,7 @@ export function CalendarView({
                 <span className={cn(
                   "mb-0.5 text-[11px]",
                   isToday
-                    ? "flex h-5 w-5 items-center justify-center rounded-full bg-[var(--color-accent)] text-white"
+                    ? "flex h-5 w-5 items-center justify-center rounded-full bg-[var(--color-accent)] text-[var(--color-bg)]"
                     : "text-[var(--color-text-faint)]",
                 )}>
                   {d.getDate()}

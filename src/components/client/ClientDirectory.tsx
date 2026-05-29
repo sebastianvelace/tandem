@@ -52,7 +52,7 @@ export function ClientDirectory({ initial }: { initial: Client[] }) {
           </label>
           <button
             onClick={() => setCreating(true)}
-            className="inline-flex items-center gap-1.5 rounded-[var(--radius)] bg-[var(--color-accent)] px-3 py-1.5 text-sm font-medium text-white hover:bg-[var(--color-accent-hover)]"
+            className="inline-flex items-center gap-1.5 rounded-[var(--radius)] bg-[var(--color-accent)] px-3 py-1.5 text-sm font-medium text-[var(--color-bg)] hover:bg-[var(--color-accent-hover)]"
           >
             <Plus size={15} />
             {t("new")}
