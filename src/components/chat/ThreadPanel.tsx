@@ -14,8 +14,8 @@ import { MessageItem } from "./MessageItem";
 import { ChatInput } from "./ChatInput";
 
 /*
- * Panel lateral derecho de un hilo (TH-01..03). Muestra el mensaje raíz y sus
- * respuestas en tiempo real; permite responder dentro del hilo.
+ * Panel lateral de un hilo (TH-01..03). Renderiza como overlay fijo desde la
+ * derecha para no romper el layout del chat ni del tablero.
  */
 export function ThreadPanel({
   areaId,
@@ -58,59 +58,67 @@ export function ThreadPanel({
   }
 
   return (
-    <aside className="flex h-full w-96 shrink-0 flex-col border-l border-[var(--color-border)] bg-[var(--color-bg)]">
-      <div className="flex h-12 items-center justify-between border-b border-[var(--color-border)] px-4">
-        <span className="text-sm font-semibold">{t("thread")}</span>
-        <button
-          onClick={onClose}
-          aria-label={t("close")}
-          className="text-[var(--color-text-faint)] hover:text-[var(--color-text)]"
-        >
-          <X size={18} />
-        </button>
-      </div>
-
-      <div className="min-h-0 flex-1 overflow-y-auto py-2">
-        <div className="border-b border-[var(--color-border)] pb-2">
-          <MessageItem
-            message={parent}
-            author={members.get(parent.authorUserId)}
-            isOwn={parent.authorUserId === currentUserId}
-            locale={locale}
-            showThreadControls={false}
-            onEdit={editReply}
-            onDelete={deleteReply}
-          />
+    <>
+      {/* Backdrop */}
+      <div
+        className="fixed inset-0 z-30 bg-black/40"
+        onClick={onClose}
+      />
+      {/* Panel */}
+      <aside className="animate-slide-right fixed inset-y-0 right-0 z-40 flex w-full max-w-sm flex-col border-l border-[var(--color-border-strong)] bg-[var(--color-bg)] shadow-2xl sm:w-96">
+        <div className="flex h-12 shrink-0 items-center justify-between border-b border-[var(--color-border)] px-4">
+          <span className="text-sm font-semibold">{t("thread")}</span>
+          <button
+            onClick={onClose}
+            aria-label={t("close")}
+            className="flex h-7 w-7 items-center justify-center rounded-md text-[var(--color-text-faint)] hover:bg-[var(--color-surface-2)] hover:text-[var(--color-text)]"
+          >
+            <X size={18} />
+          </button>
         </div>
 
-        {loading ? (
-          <p className="px-4 py-3 text-xs text-[var(--color-text-faint)]">
-            {t("loading")}
-          </p>
-        ) : (
-          <div className="pt-2">
-            {replies.map((r) => (
-              <MessageItem
-                key={r.id}
-                message={r}
-                author={members.get(r.authorUserId)}
-                isOwn={r.authorUserId === currentUserId}
-                locale={locale}
-                showThreadControls={false}
-                onEdit={editReply}
-                onDelete={deleteReply}
-              />
-            ))}
-            {replies.length === 0 && (
-              <p className="px-4 py-3 text-xs text-[var(--color-text-faint)]">
-                {t("noReplies")}
-              </p>
-            )}
+        <div className="min-h-0 flex-1 overflow-y-auto py-2">
+          <div className="border-b border-[var(--color-border)] pb-2">
+            <MessageItem
+              message={parent}
+              author={members.get(parent.authorUserId)}
+              isOwn={parent.authorUserId === currentUserId}
+              locale={locale}
+              showThreadControls={false}
+              onEdit={editReply}
+              onDelete={deleteReply}
+            />
           </div>
-        )}
-      </div>
 
-      <ChatInput placeholder={t("replyPlaceholder")} onSend={sendReply} />
-    </aside>
+          {loading ? (
+            <p className="px-4 py-3 text-xs text-[var(--color-text-faint)]">
+              {t("loading")}
+            </p>
+          ) : (
+            <div className="pt-2">
+              {replies.map((r) => (
+                <MessageItem
+                  key={r.id}
+                  message={r}
+                  author={members.get(r.authorUserId)}
+                  isOwn={r.authorUserId === currentUserId}
+                  locale={locale}
+                  showThreadControls={false}
+                  onEdit={editReply}
+                  onDelete={deleteReply}
+                />
+              ))}
+              {replies.length === 0 && (
+                <p className="px-4 py-3 text-xs text-[var(--color-text-faint)]">
+                  {t("noReplies")}
+                </p>
+              )}
+            </div>
+          )}
+        </div>
+
+        <ChatInput placeholder={t("replyPlaceholder")} onSend={sendReply} />
+      </aside>
+    </>
   );
 }

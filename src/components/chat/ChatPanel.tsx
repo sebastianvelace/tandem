@@ -60,7 +60,6 @@ export function ChatPanel({
   useEffect(() => {
     const el = scrollRef.current;
     if (!el) return;
-    // Autoscroll si entró un mensaje nuevo o estamos cerca del fondo.
     const nearBottom =
       el.scrollHeight - el.scrollTop - el.clientHeight < 160;
     if (messages.length > lastCountRef.current || nearBottom) {
@@ -88,35 +87,34 @@ export function ChatPanel({
   }
 
   return (
-    <div className="flex h-full min-w-0 flex-1">
-      <div className="flex h-full min-w-0 flex-1 flex-col">
-        <div ref={scrollRef} className="min-h-0 flex-1 overflow-y-auto py-3">
-          {messages.length === 0 ? (
-            <div className="flex h-full items-center justify-center text-sm text-[var(--color-text-faint)]">
-              {t("empty")}
-            </div>
-          ) : (
-            messages.map((m) => (
-              <MessageItem
-                key={m.id}
-                message={m}
-                author={memberMap.get(m.authorUserId)}
-                isOwn={m.authorUserId === currentUserId}
-                locale={locale}
-                replyCount={m.replyCount}
-                hasTask={m.hasTask}
-                onOpenThread={() => setThreadParent(m)}
-                onCreateTask={() => setTaskFor(m)}
-                onEdit={edit}
-                onDelete={remove}
-              />
-            ))
-          )}
-        </div>
-
-        <ChatInput placeholder={t("placeholderArea", { area: areaName })} onSend={send} />
+    <>
+      <div ref={scrollRef} className="min-h-0 flex-1 overflow-y-auto py-3">
+        {messages.length === 0 ? (
+          <div className="flex h-full items-center justify-center text-sm text-[var(--color-text-faint)]">
+            {t("empty")}
+          </div>
+        ) : (
+          messages.map((m) => (
+            <MessageItem
+              key={m.id}
+              message={m}
+              author={memberMap.get(m.authorUserId)}
+              isOwn={m.authorUserId === currentUserId}
+              locale={locale}
+              replyCount={m.replyCount}
+              hasTask={m.hasTask}
+              onOpenThread={() => setThreadParent(m)}
+              onCreateTask={() => setTaskFor(m)}
+              onEdit={edit}
+              onDelete={remove}
+            />
+          ))
+        )}
       </div>
 
+      <ChatInput placeholder={t("placeholderArea", { area: areaName })} onSend={send} />
+
+      {/* Overlays — renderizados fuera del flujo del chat (position: fixed) */}
       {threadParent && (
         <ThreadPanel
           areaId={areaId}
@@ -137,6 +135,6 @@ export function ChatPanel({
           onCreated={(id) => markHasTask(id)}
         />
       )}
-    </div>
+    </>
   );
 }

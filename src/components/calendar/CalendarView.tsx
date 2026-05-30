@@ -98,6 +98,18 @@ export function CalendarView({
     });
   }, [locale]);
 
+  // Versión corta del día para móvil (Lu, Ma, ...)
+  const weekdaysShort = useMemo(() => {
+    const base = startOfMonthGrid(2024, 0);
+    return Array.from({ length: 7 }, (_, i) => {
+      const d = new Date(base);
+      d.setDate(base.getDate() + i);
+      return new Intl.DateTimeFormat(locale === "es" ? "es-ES" : "en-US", {
+        weekday: "narrow",
+      }).format(d);
+    });
+  }, [locale]);
+
   function openNewEvent(date: Date) {
     setNewEvent({ date, title: "", areaId: areas[0]?.id ?? "" });
     setTimeout(() => inputRef.current?.focus(), 0);
@@ -131,11 +143,11 @@ export function CalendarView({
   }
 
   return (
-    <div className="flex h-full flex-col px-6 py-5">
+    <div className="flex h-full flex-col px-3 py-3 md:px-6 md:py-5">
       {/* Encabezado */}
-      <div className="mb-4 flex items-center gap-3">
-        <h1 className="text-base font-semibold capitalize">{monthLabel}</h1>
-        <div className="flex items-center gap-1">
+      <div className="mb-3 flex items-center gap-2 md:mb-4 md:gap-3">
+        <h1 className="text-sm font-semibold capitalize md:text-base">{monthLabel}</h1>
+        <div className="flex items-center gap-0.5">
           <button
             onClick={() => setCursor(new Date(cursor.getFullYear(), cursor.getMonth() - 1, 1))}
             aria-label={t("prev")}
@@ -161,66 +173,73 @@ export function CalendarView({
         {areas.length > 0 && (
           <button
             onClick={() => openNewEvent(new Date())}
-            className="ml-auto flex items-center gap-1.5 rounded-[var(--radius)] border border-[var(--color-border-strong)] px-3 py-1.5 text-xs font-medium text-[var(--color-text-muted)] hover:bg-[var(--color-surface-2)] hover:text-[var(--color-text)]"
+            className="ml-auto flex items-center gap-1 rounded-[var(--radius)] border border-[var(--color-border-strong)] px-2 py-1.5 text-xs font-medium text-[var(--color-text-muted)] hover:bg-[var(--color-surface-2)] hover:text-[var(--color-text)] md:gap-1.5 md:px-3"
           >
             <Plus size={13} />
-            Añadir tarea
+            <span className="hidden sm:inline">Añadir tarea</span>
           </button>
         )}
       </div>
 
       {/* Modal nueva tarea */}
       {newEvent && (
-        <div className="mb-4 flex items-center gap-2 rounded-[var(--radius)] border border-[var(--color-border-strong)] bg-[var(--color-surface)] px-3 py-2 animate-slide-up">
-          <input
-            ref={inputRef}
-            value={newEvent.title}
-            onChange={(e) => setNewEvent({ ...newEvent, title: e.target.value })}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") void saveEvent();
-              if (e.key === "Escape") setNewEvent(null);
-            }}
-            placeholder="Título de la tarea..."
-            className="flex-1 bg-transparent text-sm focus:outline-none"
-          />
-          <select
-            value={newEvent.areaId}
-            onChange={(e) => setNewEvent({ ...newEvent, areaId: e.target.value })}
-            className="rounded border border-[var(--color-border)] bg-[var(--color-bg)] px-2 py-1 text-xs focus:outline-none"
-          >
-            {areas.map((a) => (
-              <option key={a.id} value={a.id}>{a.name}</option>
-            ))}
-          </select>
-          <input
-            type="date"
-            value={`${newEvent.date.getFullYear()}-${String(newEvent.date.getMonth() + 1).padStart(2, "0")}-${String(newEvent.date.getDate()).padStart(2, "0")}`}
-            onChange={(e) => {
-              const d = new Date(e.target.value + "T12:00:00");
-              if (!isNaN(d.getTime())) setNewEvent({ ...newEvent, date: d });
-            }}
-            className="rounded border border-[var(--color-border)] bg-[var(--color-bg)] px-2 py-1 text-xs focus:outline-none"
-          />
-          <button
-            onClick={() => void saveEvent()}
-            disabled={saving || !newEvent.title.trim()}
-            className="rounded bg-[var(--color-accent)] px-3 py-1 text-xs font-medium text-[var(--color-bg)] disabled:opacity-40"
-          >
-            {saving ? "…" : "Guardar"}
-          </button>
-          <button
-            onClick={() => setNewEvent(null)}
-            className="text-[var(--color-text-faint)] hover:text-[var(--color-text)]"
-          >
-            <X size={14} />
-          </button>
+        <div className="mb-3 animate-slide-up rounded-[var(--radius)] border border-[var(--color-border-strong)] bg-[var(--color-surface)] p-3">
+          <div className="flex items-center gap-2">
+            <input
+              ref={inputRef}
+              value={newEvent.title}
+              onChange={(e) => setNewEvent({ ...newEvent, title: e.target.value })}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") void saveEvent();
+                if (e.key === "Escape") setNewEvent(null);
+              }}
+              placeholder="Título de la tarea..."
+              className="flex-1 bg-transparent text-sm focus:outline-none"
+            />
+            <button
+              onClick={() => setNewEvent(null)}
+              className="shrink-0 text-[var(--color-text-faint)] hover:text-[var(--color-text)]"
+            >
+              <X size={14} />
+            </button>
+          </div>
+          <div className="mt-2 flex flex-wrap items-center gap-2">
+            <select
+              value={newEvent.areaId}
+              onChange={(e) => setNewEvent({ ...newEvent, areaId: e.target.value })}
+              className="flex-1 rounded border border-[var(--color-border)] bg-[var(--color-bg)] px-2 py-1 text-xs focus:outline-none"
+            >
+              {areas.map((a) => (
+                <option key={a.id} value={a.id}>{a.name}</option>
+              ))}
+            </select>
+            <input
+              type="date"
+              value={`${newEvent.date.getFullYear()}-${String(newEvent.date.getMonth() + 1).padStart(2, "0")}-${String(newEvent.date.getDate()).padStart(2, "0")}`}
+              onChange={(e) => {
+                const d = new Date(e.target.value + "T12:00:00");
+                if (!isNaN(d.getTime())) setNewEvent({ ...newEvent, date: d });
+              }}
+              className="rounded border border-[var(--color-border)] bg-[var(--color-bg)] px-2 py-1 text-xs focus:outline-none"
+            />
+            <button
+              onClick={() => void saveEvent()}
+              disabled={saving || !newEvent.title.trim()}
+              className="rounded bg-[var(--color-accent)] px-3 py-1 text-xs font-medium text-[var(--color-bg)] disabled:opacity-40"
+            >
+              {saving ? "…" : "Guardar"}
+            </button>
+          </div>
         </div>
       )}
 
       {/* Días de la semana */}
       <div className="grid grid-cols-7 border-b border-white/[0.1] pb-1.5 text-xs text-[var(--color-text-faint)]">
-        {weekdays.map((w) => (
-          <div key={w} className="px-2 capitalize tracking-wide">{w}</div>
+        {weekdays.map((w, i) => (
+          <div key={w} className="px-1 capitalize tracking-wide">
+            <span className="hidden md:inline">{w}</span>
+            <span className="md:hidden">{weekdaysShort[i]}</span>
+          </div>
         ))}
       </div>
 
@@ -233,37 +252,46 @@ export function CalendarView({
           return (
             <div
               key={d.toISOString()}
+              onClick={() => areas.length > 0 && openNewEvent(new Date(d))}
               className={cn(
-                "group flex min-h-0 flex-col gap-0.5 overflow-y-auto bg-[#07070e] p-1.5 transition-colors hover:bg-white/[0.04]",
+                "group flex min-h-0 cursor-pointer flex-col gap-0.5 overflow-y-auto bg-[#07070e] transition-colors hover:bg-white/[0.04]",
+                "p-0.5 md:p-1.5",
                 !inMonth && "opacity-30",
               )}
             >
               <div className="flex items-center justify-between">
                 <span className={cn(
-                  "mb-0.5 text-[11px]",
+                  "text-[10px] md:text-[11px]",
                   isToday
-                    ? "flex h-5 w-5 items-center justify-center rounded-full bg-[var(--color-accent)] text-[var(--color-bg)]"
+                    ? "flex h-4 w-4 items-center justify-center rounded-full bg-[var(--color-accent)] text-[var(--color-bg)] md:h-5 md:w-5"
                     : "text-[var(--color-text-faint)]",
                 )}>
                   {d.getDate()}
                 </span>
+                {/* Botón + visible siempre en móvil, solo en hover en desktop */}
                 {areas.length > 0 && (
                   <button
-                    onClick={() => openNewEvent(new Date(d))}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      openNewEvent(new Date(d));
+                    }}
                     title="Añadir tarea"
-                    className="hidden h-4 w-4 items-center justify-center rounded text-[var(--color-text-faint)] hover:bg-[var(--color-surface-2)] hover:text-[var(--color-text)] group-hover:flex"
+                    className="flex h-4 w-4 items-center justify-center rounded text-[var(--color-text-faint)] hover:bg-[var(--color-surface-2)] hover:text-[var(--color-text)] md:hidden md:group-hover:flex"
                   >
-                    <Plus size={10} />
+                    <Plus size={9} />
                   </button>
                 )}
               </div>
-              {items.map((task) => (
+              {items.slice(0, 2).map((task) => (
                 <button
                   key={task.id}
-                  onClick={() => router.push(`/areas/${task.areaId}`)}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    router.push(`/areas/${task.areaId}`);
+                  }}
                   title={task.title}
                   className={cn(
-                    "flex items-center gap-1 truncate rounded px-1 py-0.5 text-left text-[11px] hover:bg-[var(--color-surface-2)]",
+                    "flex w-full items-center gap-0.5 truncate rounded px-0.5 py-0.5 text-left text-[9px] hover:bg-[var(--color-surface-2)] md:gap-1 md:px-1 md:text-[11px]",
                     task.status === "completada" && "line-through opacity-50",
                   )}
                 >
@@ -271,6 +299,11 @@ export function CalendarView({
                   <span className="truncate">{task.title}</span>
                 </button>
               ))}
+              {items.length > 2 && (
+                <span className="px-0.5 text-[9px] text-[var(--color-text-faint)] md:px-1 md:text-[10px]">
+                  +{items.length - 2}
+                </span>
+              )}
             </div>
           );
         })}

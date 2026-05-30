@@ -29,20 +29,21 @@ export function ClientDirectory({ initial }: { initial: Client[] }) {
   );
 
   return (
-    <div className="mx-auto h-full w-full max-w-4xl px-6 py-6">
-      <div className="mb-4 flex items-center justify-between">
+    <div className="mx-auto h-full w-full max-w-4xl px-4 py-4 md:px-6 md:py-6">
+      {/* Encabezado — apilado en móvil, fila en desktop */}
+      <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <h1 className="text-lg font-semibold">{t("title")}</h1>
-        <div className="flex items-center gap-3">
-          <div className="relative">
+        <div className="flex flex-wrap items-center gap-2">
+          <div className="relative flex-1 sm:flex-none">
             <Search size={13} className="pointer-events-none absolute left-2 top-1/2 -translate-y-1/2 text-[var(--color-text-faint)]" />
             <input
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder={t("search")}
-              className="h-8 w-48 rounded-md border border-[var(--color-border-strong)] bg-[var(--color-surface-2)] pl-7 pr-2 text-xs focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)]"
+              className="h-8 w-full rounded-md border border-[var(--color-border-strong)] bg-[var(--color-surface-2)] pl-7 pr-2 text-xs focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)] sm:w-48"
             />
           </div>
-          <label className="flex items-center gap-1.5 text-xs text-[var(--color-text-muted)]">
+          <label className="flex shrink-0 items-center gap-1.5 text-xs text-[var(--color-text-muted)]">
             <input
               type="checkbox"
               checked={showInactive}
@@ -52,7 +53,7 @@ export function ClientDirectory({ initial }: { initial: Client[] }) {
           </label>
           <button
             onClick={() => setCreating(true)}
-            className="inline-flex items-center gap-1.5 rounded-[var(--radius)] bg-[var(--color-accent)] px-3 py-1.5 text-sm font-medium text-[var(--color-bg)] hover:bg-[var(--color-accent-hover)]"
+            className="flex shrink-0 items-center gap-1.5 rounded-[var(--radius)] bg-[var(--color-accent)] px-3 py-1.5 text-sm font-medium text-[var(--color-bg)] hover:bg-[var(--color-accent-hover)]"
           >
             <Plus size={15} />
             {t("new")}
@@ -72,7 +73,7 @@ export function ClientDirectory({ initial }: { initial: Client[] }) {
                 href={`/clients/${c.id}`}
                 className="flex items-center gap-3 px-4 py-3 hover:bg-[var(--color-surface)]"
               >
-                <span className="flex h-9 w-9 items-center justify-center rounded-full bg-[var(--color-surface-2)] text-[var(--color-text-muted)]">
+                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[var(--color-surface-2)] text-[var(--color-text-muted)]">
                   <Building2 size={16} />
                 </span>
                 <div className="min-w-0 flex-1">
@@ -82,7 +83,7 @@ export function ClientDirectory({ initial }: { initial: Client[] }) {
                   </p>
                 </div>
                 {!c.isActive && (
-                  <span className="rounded-full bg-[var(--color-surface-2)] px-2 py-0.5 text-[10px] text-[var(--color-text-faint)]">
+                  <span className="shrink-0 rounded-full bg-[var(--color-surface-2)] px-2 py-0.5 text-[10px] text-[var(--color-text-faint)]">
                     {t("inactive")}
                   </span>
                 )}

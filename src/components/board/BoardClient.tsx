@@ -2,7 +2,7 @@
 
 import { useMemo, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
-import { LayoutGrid, List, Search } from "lucide-react";
+import { Filter, LayoutGrid, List, Search, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useHotkeys } from "@/lib/hotkeys";
 import type { TaskDTO, TaskStatus } from "@/lib/board/types";
@@ -16,6 +16,7 @@ import {
   passesFilters,
   sortTasks,
   subtaskProgress,
+  hasActiveFilters,
   type SortMode,
 } from "@/lib/board/selectors";
 import type { UpdateTaskInput } from "@/lib/zod/task";
@@ -32,12 +33,6 @@ import { ListView } from "./ListView";
 import { BoardFilters } from "./BoardFilters";
 import { TaskDetail } from "./TaskDetail";
 
-/*
- * Orquestador del tablero (Sprint 3). Mantiene el set de tareas en tiempo real
- * (useAreaTasks), aplica filtros/orden/búsqueda y vista (tablero/lista), y
- * coordina las mutaciones con actualización optimista. La autorización vive en
- * las Server Actions.
- */
 function midpoint(prev: number | null, next: number | null): number {
   if (prev === null && next === null) return 1;
   if (prev === null) return next! / 2;
@@ -64,13 +59,11 @@ export function BoardClient({
   const [view, setView] = useState<"board" | "list">("board");
   const [query, setQuery] = useState("");
   const [selectedId, setSelectedId] = useState<string | null>(null);
-  const [toast, setToast] = useState<{ parentId: string; label: string } | null>(
-    null,
-  );
+  const [toast, setToast] = useState<{ parentId: string; label: string } | null>(null);
   const [newTaskSignal, setNewTaskSignal] = useState(0);
+  const [filtersOpen, setFiltersOpen] = useState(false);
   const searchRef = useRef<HTMLInputElement>(null);
 
-  // Atajos (UX-10): "/" búsqueda, "N" nueva tarea, "Esc" cerrar panel.
   useHotkeys({
     "/": (e) => {
       e.preventDefault();
@@ -118,7 +111,8 @@ export function BoardClient({
     ? tasks.find((t) => t.id === selectedId) ?? null
     : null;
 
-  // ----- mutaciones -----
+  const activeFilters = hasActiveFilters(filters);
+
   async function handleCreate(input: {
     status?: TaskStatus;
     title: string;
@@ -131,7 +125,6 @@ export function BoardClient({
   async function handleUpdate(input: UpdateTaskInput) {
     const prev = tasks.find((x) => x.id === input.id);
     if (prev) {
-      // Optimista: fusionamos el patch mientras viaja la action.
       upsert({
         ...prev,
         ...("title" in input && input.title ? { title: input.title } : {}),
@@ -150,7 +143,7 @@ export function BoardClient({
       upsert(res.data);
       maybeSuggestParent(res.data);
     } else if (prev) {
-      upsert(prev); // revertir
+      upsert(prev);
     }
   }
 
@@ -196,13 +189,11 @@ export function BoardClient({
     void handleUpdate({ id: task.id, status: nextStatus });
   }
 
-  /** SUB-07: si todas las subtareas de un padre están completas, sugerirlo. */
   function maybeSuggestParent(changed: TaskDTO) {
     if (!changed.parentId) return;
     const parent = tasks.find((x) => x.id === changed.parentId);
     if (!parent || parent.status === "completada") return;
     const prog = subtaskProgress(parent.id, childrenByParent(tasks));
-    // tasks aún no refleja el cambio recién guardado; lo contamos aparte.
     const total = prog.total;
     const completed =
       prog.completed + (changed.status === "completada" ? 1 : 0);
@@ -214,25 +205,30 @@ export function BoardClient({
   return (
     <div className="flex h-full min-w-0 flex-1">
       <div className="relative flex min-w-0 flex-1 flex-col">
-        {/* Toolbar */}
-        <div className="flex flex-wrap items-center gap-3 border-b border-white/[0.06] px-4 py-2">
+        {/* Toolbar principal */}
+        <div className="flex flex-wrap items-center gap-2 border-b border-white/[0.08] px-3 py-2">
+          {/* Vista board/lista */}
           <div className="flex items-center rounded-md border border-white/[0.1]">
             <ToolbarToggle active={view === "board"} onClick={() => setView("board")}>
-              <LayoutGrid size={14} /> {t("board")}
+              <LayoutGrid size={14} />
+              <span className="hidden sm:inline">{t("board")}</span>
             </ToolbarToggle>
             <ToolbarToggle active={view === "list"} onClick={() => setView("list")}>
-              <List size={14} /> {t("list")}
+              <List size={14} />
+              <span className="hidden sm:inline">{t("list")}</span>
             </ToolbarToggle>
           </div>
 
+          {/* Orden */}
           <button
             onClick={() => setSort(sort === "manual" ? "priority" : "manual")}
-            className="rounded-md border border-white/[0.1] px-2 py-1 text-xs text-[var(--color-text-muted)] hover:bg-white/[0.06] hover:text-[var(--color-text)]"
+            className="hidden rounded-md border border-white/[0.1] px-2 py-1 text-xs text-[var(--color-text-muted)] hover:bg-white/[0.06] hover:text-[var(--color-text)] sm:block"
           >
             {sort === "manual" ? t("orderManual") : t("orderPriority")}
           </button>
 
-          <div className="relative">
+          {/* Búsqueda */}
+          <div className="relative flex-1 sm:flex-none">
             <Search
               size={13}
               className="pointer-events-none absolute left-2 top-1/2 -translate-y-1/2 text-[var(--color-text-faint)]"
@@ -242,11 +238,26 @@ export function BoardClient({
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder={t("searchPlaceholder")}
-              className="h-7 w-44 rounded-md border border-white/[0.1] bg-white/[0.05] pl-7 pr-2 text-xs focus:outline-none focus:ring-1 focus:ring-white/30"
+              className="h-7 w-full rounded-md border border-white/[0.1] bg-white/[0.05] pl-7 pr-2 text-xs focus:outline-none focus:ring-1 focus:ring-white/30 sm:w-40"
             />
           </div>
 
-          <div className="ml-auto">
+          {/* Botón filtros móvil */}
+          <button
+            onClick={() => setFiltersOpen((v) => !v)}
+            className={cn(
+              "flex items-center gap-1.5 rounded-md border px-2 py-1 text-xs transition-colors sm:hidden",
+              filtersOpen || activeFilters
+                ? "border-white/30 bg-white/[0.1] text-white"
+                : "border-white/[0.1] text-[var(--color-text-muted)] hover:bg-white/[0.06]",
+            )}
+          >
+            <Filter size={13} />
+            {activeFilters && <span className="h-1.5 w-1.5 rounded-full bg-white" />}
+          </button>
+
+          {/* Filtros desktop */}
+          <div className="ml-auto hidden sm:block">
             <BoardFilters
               filters={filters}
               setFilters={setFilters}
@@ -255,6 +266,27 @@ export function BoardClient({
             />
           </div>
         </div>
+
+        {/* Filtros móvil colapsable */}
+        {filtersOpen && (
+          <div className="border-b border-white/[0.08] px-3 py-2 sm:hidden">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-xs font-medium text-[var(--color-text-muted)]">Filtros</span>
+              <button
+                onClick={() => setFiltersOpen(false)}
+                className="text-[var(--color-text-faint)] hover:text-[var(--color-text)]"
+              >
+                <X size={14} />
+              </button>
+            </div>
+            <BoardFilters
+              filters={filters}
+              setFilters={setFilters}
+              members={members}
+              clients={clients}
+            />
+          </div>
+        )}
 
         {/* Vista */}
         <div className="min-h-0 flex-1">
